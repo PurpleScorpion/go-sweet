@@ -21,3 +21,9 @@
 go.work
 go.work.sum
 .idea/
+
+*.log
+/logs/*
+/log/*
+/log/
+/logs/

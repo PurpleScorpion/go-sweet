@@ -2,6 +2,23 @@
 
 # 基于beego的web框架
 
+# 代码生成
+```text
+本项目可以使用go-sweet-generator进行代码生成 (开发中...)
+可生成
+    - controller
+    - models
+    - service
+    - routers
+```
+
+# 使用前注意
+```text
+go version 1.20
+使用前请先执行 go mod tidy 进行模块依赖下载
+请仔细阅读配置文件说明
+```
+
 ## 目录结构
 ```text
     - common # 公共模块

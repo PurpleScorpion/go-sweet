@@ -1,0 +1,6 @@
+package constants
+
+var (
+	UTC_LAYOUT   = "2006-01-02T15:04:05.999999Z"
+	LOCAL_LAYOUT = "2006-01-02 15:04:05"
+)

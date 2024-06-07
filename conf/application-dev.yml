@@ -1,0 +1,35 @@
+server:
+  port: 20001
+  name: go-sweet
+
+sweet:
+  mysql:
+    active: true #是否激活使用mysql配置 必填
+    host: 192.168.253.130
+    port: 3306
+    user: root
+    password: 123456
+    dbName: go_sweet_db
+    maxIdleConns: 50 # 最大空闲连接数
+    maxOpenConns: 100 # 最大打开连接数
+
+  redis:
+    active: true #是否激活使用redis配置
+    host: 192.168.253.130
+    port: 6379
+    password: 123456 # 若没有密码，则不用填该项
+    database: 2
+
+  logging:
+    level: info
+    file: log/go_sweet.log # 日志文件路径 必填
+    maxSize: 10 # 单个日志文件最大大小，单位：MB
+    maxDays: 30 # 单个日志文件保存天数
+    maxBackups: 10 # 最大备份日志文件数量
+
+  img:
+    mappingUrl: /static # 映射的url 参考Tomcat映射图片地址配置
+    path: D:/imgs
+    baseUrl: http://localhost:20001
+
+

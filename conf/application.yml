@@ -1,0 +1,10 @@
+server:
+  name: go-sweet
+  active: dev
+
+sweet:
+  excludeUrl:
+    prefix:
+      - /static/
+    full:
+      - /login

@@ -38,7 +38,7 @@ func init() {
 }
 
 func main() {
-
+	// 跨域配置
 	corsMiddleware := cors.Allow(&cors.Options{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
@@ -53,7 +53,7 @@ func main() {
 
 	// 注册中间件
 	web.InsertFilter("*", web.BeforeRouter, corsMiddleware)
-
+	// 权限拦截
 	web.InsertFilter("/*", web.BeforeRouter, FilterUser)
 
 	web.Run()

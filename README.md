@@ -29,7 +29,7 @@ go version 1.20
         - vo            # vo包
         - yaml          # yaml配置文件处理包 - 一般无需理会
     - conf              # 配置文件包 - 内容参考java的SpringBoot
-        - application.yml       # 以下配置文件将会在下发详细介绍
+        - application.yml       # 以下配置文件将会在下面详细介绍
         - application-dev.yml
         - application-prod.yml
         - application-test.yml

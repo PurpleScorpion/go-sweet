@@ -1,15 +1,16 @@
 # go-sweet
 
 # 基于beego的web框架
-
+## github地址 : https://github.com/PurpleScorpion/go-sweet
 # 代码生成
 ```text
 本项目可以使用go-sweet-generator进行代码生成 (开发中...)
-可生成
+可生成 (增/删/改/根据ID查询/分页列表查询)
     - controller
     - models
     - service
     - routers
+同时可生成前端Vue3代码
 ```
 
 # 使用前注意

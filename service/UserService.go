@@ -17,7 +17,7 @@ var USER_SALT = "babalachongya"
 
 func (that *UserService) HealthCheck(id int32) utils.R {
 
-	expire := GetCache(constants.GetUserExpireTimeKey(id))
+	expire := utils.GetCache(constants.GetUserExpireTimeKey(id))
 	if utils.IsEmpty(expire) {
 		return utils.Fail(constants.TOKEN_ERROR, "user expired")
 	}
@@ -31,7 +31,7 @@ func (that *UserService) HealthCheck(id int32) utils.R {
 		return utils.Fail(constants.TOKEN_ERROR, "user expired")
 	}
 
-	SetCache(constants.GetHealthCheckKey(id), utils.GetNowUTCDate())
+	utils.SetCache(constants.GetHealthCheckKey(id), utils.GetNowUTCDate())
 
 	return utils.Success("")
 }
@@ -112,8 +112,8 @@ func (that *UserService) Login(user models.User) utils.R {
 	js.FluentPut("expirationTime", utcDate)
 	token, _ := utils.Encrypt(js.ToJsonString())
 
-	SetCache(constants.GetHealthCheckKey(u.Id), utils.GetNowUTCDate())
-	SetCache(constants.GetUserExpireTimeKey(u.Id), utcDate)
+	utils.SetCache(constants.GetHealthCheckKey(u.Id), utils.GetNowUTCDate())
+	utils.SetCache(constants.GetUserExpireTimeKey(u.Id), utcDate)
 
 	var userVO vo.UserVO
 	userVO.Id = u.Id

@@ -114,7 +114,7 @@ sweet:
 
   redis:
     # 必填 
-    active: true #是否激活使用redis配置5   
+    active: true #是否激活使用redis配置  
     # 必填               
     host: 192.168.253.130 # redis地址
     # 选填: 默认值6379
@@ -123,7 +123,37 @@ sweet:
     password: 123456 # redis密码
     # 选填: 默认值0
     database: 2  # redis使用的数据库
-
+  
+  adx:
+    # 必填 
+    active: true #是否激活使用adx配置 
+    # 必填               
+    host: https://your.adx.com # adx地址 https开头
+    # 选填: 默认值AAK 可选值: AAK/SMI
+    # AAK : 全称 AadAppKey , 通过AppId/AppKey/AuthorityID认证
+    # SMI : 全称 SystemManagedIdentity , 通过系统托管的标识认证
+    # 当且仅当 authMethod为AAK时 AppId/AppKey/AuthorityID 必填
+    authMethod: AAK
+    appId: yourAppId
+    appKey: yourAppKey
+    authorityID: yourAuthorityId
+    # 选填: 默认值false 是否开启日志
+    logActive: true
+  
+  mqtt:
+    # 必填 
+    active: true #是否激活使用mqtt配置 
+     # 必填               
+    host: 192.168.253.130 # mqtt地址
+    # 选填: 默认值1883
+    port: 1883
+    # 必填 用户名
+    user: yourUser
+    # 必填 密码
+    password: yourPassword
+    # 注意MQTT不光需要发送还需要监听 , 监听需要在common/yaml/MQTTServer/MqttOnline() 处配置
+    # 该处已经有一个配置案例, 请根据需要自行修改
+    
   # 日志配置
   logging:
     # 选填: 默认值info

@@ -1,9 +1,9 @@
 package logger
 
 import (
+	"fmt"
 	"github.com/PurpleScorpion/go-sweet-json/jsonutil"
 	"github.com/beego/beego/v2/core/logs"
-	sweetyml "go-sweet/common/yaml"
 )
 
 type LogUtil struct {
@@ -11,9 +11,9 @@ type LogUtil struct {
 
 var log *logs.BeeLogger
 
-func InitLogger() {
-
-	conf := sweetyml.GetYmlConf()
+func init() {
+	readLog()
+	conf := yamlConf
 	// 创建一个日志器，可以给它指定一个名称，便于区分多个日志器
 	log = logs.NewLogger()
 	// 设置日志级别，例如：debug、info、warn、error、critical，默认为debug
@@ -53,19 +53,19 @@ func InitLogger() {
 	}
 }
 
-func Info(format string) {
+func Info(format string, data ...interface{}) {
 	// 控制台打印
-	logs.Info(format)
+	logs.Info(fmt.Sprintf(format, data...))
 	// 文件记录
-	log.Info(format)
+	log.Info(fmt.Sprintf(format, data...))
 }
 
-func Warn(format string) {
-	logs.Warn(format)
-	log.Warn(format)
+func Warn(format string, data ...interface{}) {
+	logs.Warn(fmt.Sprintf(format, data...))
+	log.Warn(fmt.Sprintf(format, data...))
 }
 
-func Error(format string) {
-	logs.Error(format)
-	log.Error(format)
+func Error(format string, data ...interface{}) {
+	logs.Error(fmt.Sprintf(format, data...))
+	log.Error(fmt.Sprintf(format, data...))
 }

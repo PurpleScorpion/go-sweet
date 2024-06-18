@@ -102,7 +102,7 @@ func (that *SystemService) ChangeUserStatus(userVO vo.UserVO) utils.R {
 		return utils.Fail(constants.UPDATE_ERROR, "Update failed")
 	}
 	if userVO.Status == constants.FAIL_STATUS {
-		DeleteCache(constants.GetUserExpireTimeKey(userVO.Id))
+		utils.DeleteCache(constants.GetUserExpireTimeKey(userVO.Id))
 	}
 
 	return utils.Success(constants.SUCCESS)

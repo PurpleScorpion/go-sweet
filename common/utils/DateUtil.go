@@ -2,7 +2,6 @@ package utils
 
 import (
 	"go-sweet/common/constants"
-	"go-sweet/common/logger"
 	"time"
 )
 
@@ -38,7 +37,6 @@ localTime: 2006-01-02 15:04:05
 func UTCtoLocal(utcTime string) (string, error) {
 	inputTime, err := time.Parse(constants.UTC_LAYOUT, utcTime)
 	if err != nil {
-		logger.Error(err.Error())
 		return "", err
 	}
 	outputTimeStr := inputTime.Format(constants.LOCAL_LAYOUT)
@@ -53,7 +51,6 @@ utcTime: 2006-01-02T15:04:05.999999Z
 func LocaltoUTC(localTime string) (string, error) {
 	inputTime, err := time.Parse(constants.LOCAL_LAYOUT, localTime)
 	if err != nil {
-		logger.Error(err.Error())
 		return "", err
 	}
 	outputTimeStr := inputTime.Format(constants.UTC_LAYOUT)
@@ -67,7 +64,6 @@ utcTime: 2006-01-02T15:04:05.999999Z
 func ParseUTC(utcTime string) (time.Time, error) {
 	inputTime, err := time.Parse(constants.UTC_LAYOUT, utcTime)
 	if err != nil {
-		logger.Error(err.Error())
 		return time.Time{}, err
 	}
 	return inputTime, nil
@@ -80,7 +76,6 @@ localTime: 2006-01-02 15:04:05
 func ParseLocal(localTime string) (time.Time, error) {
 	inputTime, err := time.Parse(constants.LOCAL_LAYOUT, localTime)
 	if err != nil {
-		logger.Error(err.Error())
 		return time.Time{}, err
 	}
 	return inputTime, nil

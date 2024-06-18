@@ -8,10 +8,6 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"github.com/PurpleScorpion/go-sweet-json/jsonutil"
-	"go-sweet/common/constants"
-	"go-sweet/common/logger"
-	"time"
 )
 
 type RsaUtil struct {
@@ -116,34 +112,4 @@ func Decrypt(ciphertextString string) (string, error) {
 		return "null", err
 	}
 	return string(plaintext), nil
-}
-
-var publicKsyString = `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo/fchdxRc2FgbiRmAKh+
-ZzpFtkixo5PceSUnmHXSloG2xXam/OKNba56Zx3fRytXwNB6yJA3y/boyk15b0ih
-PVfry1ipW9ABIJaeqw9MhEQZklxv/Ux8vN8/HdDt794FnkqOH0lFZBBMa1w1wByN
-7qwn0M4Yl+BfQm6udWPjqMO2/q56y7hB115F9o0+ZhrzZOiflwfcFrsHS29Fw5dc
-Yav4tr1+s/niHUT8YDN5tXIuZDJkr34SuVrwqvzxYM8ouUgRc4T8bkVIXOpbd0Zt
-EQFly6XhzBFSMok4/6wutYL839S35bm0j+pNoYVEGLz0v7DP+ZQOf+yN/4K1GsIb
-sQIDAQAB
------END PUBLIC KEY-----`
-var publicKey, _ = LoadPublicKey(publicKsyString)
-
-func GetCacheServerToken() string {
-	now := time.Now().UTC()
-	formattedTime := now.Format(constants.UTC_LAYOUT)
-	js := jsonutil.NewJSONObject()
-	js.FluentPut("clientId", "cloud-ems")
-	js.FluentPut("time", formattedTime)
-
-	plaintext := []byte(js.ToJsonString())
-
-	ciphertext, err := rsa.EncryptPKCS1v15(rand.Reader, publicKey, plaintext)
-
-	if err != nil {
-		logger.Error("GetCacheServerToken Error: " + err.Error())
-		panic("GetCacheServerToken Error: " + err.Error())
-	}
-	encodedCiphertext := base64.StdEncoding.EncodeToString(ciphertext)
-	return encodedCiphertext
 }

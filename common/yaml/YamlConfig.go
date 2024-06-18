@@ -14,6 +14,8 @@ type Server struct {
 type Sweet struct {
 	MySqlConfig MySqlConf  `yaml:"mysql"`
 	RedisConfig RedisConf  `yaml:"redis"`
+	Adx         Adx        `yaml:"adx"`
+	Mqtt        Mqtt       `yaml:"mqtt"`
 	Log         Logging    `yaml:"logging"`
 	Img         Images     `yaml:"img"`
 	ExcUrl      ExcludeUrl `yaml:"excludeUrl"`
@@ -50,6 +52,24 @@ type Images struct {
 	MappingUrl string `yaml:"mappingUrl"`
 	Path       string `yaml:"path"`
 	BaseUrl    string `yaml:"baseUrl"`
+}
+
+type Mqtt struct {
+	Active   bool   `yaml:"active"`
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	User     string `yaml:"user"`
+	Password string `yaml:"password"`
+}
+
+type Adx struct {
+	Active      bool   `yaml:"active"`
+	AuthMethod  string `yaml:"authMethod"` // 认证方式  AAK(AadAppKey): 通过AppId/AppKey/AuthorityID认证  SMI(SystemManagedIdentity): 通过系统托管的标识认证
+	Host        string `yaml:"host"`
+	AppId       string `yaml:"appId"`
+	AppKey      string `yaml:"appKey"`
+	AuthorityID string `yaml:"authorityID"`
+	LogActive   bool   `yaml:"logActive"` // 是否激活日志
 }
 
 type ExcludeUrl struct {

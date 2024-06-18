@@ -20,6 +20,20 @@ sweet:
     password: 123456 # 若没有密码，则不用填该项
     database: 2
 
+  adx:
+    active: true
+    host: https://your.adx.com
+    appId: your_app_id
+    appKey: your_app_key
+    authorityID: your_authority_id
+
+  mqtt:
+    active: true
+    host: 192.168.1.17
+    port: 1883
+    user: admin
+    password: 123456
+
   logging:
     level: info
     file: log/go_sweet.log # 日志文件路径 必填

@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"github.com/PurpleScorpion/go-sweet-json/jsonutil"
 	"go-sweet/common/constants"
-	"go-sweet/common/logger"
 	"go-sweet/common/utils"
 	sweetyml "go-sweet/common/yaml"
 	_ "go-sweet/routers"
-	"go-sweet/service"
 	"net/http"
 	"strings"
 	"time"
@@ -29,9 +27,6 @@ func init() {
 	web.BConfig.CopyRequestBody = true
 
 	web.BConfig.WebConfig.StaticDir[conf.Sweet.Img.MappingUrl] = conf.Sweet.Img.Path
-
-	logger.InitLogger()
-	service.InitService()
 
 	fullExcludeUrls = conf.Sweet.ExcUrl.Full
 	prefixExcludeUrls = conf.Sweet.ExcUrl.Prefix
@@ -168,7 +163,7 @@ func compareDate(utcStr string, data string) (bool, error) {
 	js.ParseObject(data)
 	id := js.GetFloat64("id")
 
-	expire := service.GetCache(constants.GetUserExpireTimeKey(int32(id)))
+	expire := utils.GetCache(constants.GetUserExpireTimeKey(int32(id)))
 	if utils.IsEmpty(expire) {
 		return true, nil
 	}

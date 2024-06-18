@@ -39,6 +39,14 @@ func ReadYml() {
 		panic("server.active is empty")
 	}
 	readChildConf()
+	initServer()
+}
+
+func initServer() {
+	initMySQL()
+	initRedis()
+	initAdx()
+	initMqtt()
 }
 
 func GetYmlConf() YmlConfig {
@@ -71,93 +79,6 @@ func readChildConf() {
 	saveConf(yamlConf2)
 }
 
-func defaultData(yamlConf2 YmlConfig) YmlConfig {
-	if yamlConf2.Server.Port == 0 {
-		yamlConf2.Server.Port = 8080
-	}
-	if IsEmpty(yamlConf2.Server.Name) {
-		yamlConf2.Server.Name = "go-sweet"
-	}
-	if yamlConf2.Sweet.MySqlConfig.Active {
-		if IsEmpty(yamlConf2.Sweet.MySqlConfig.Host) {
-			panic("mysql.host is empty")
-		}
-		if yamlConf2.Sweet.MySqlConfig.Port == 0 {
-			yamlConf2.Sweet.MySqlConfig.Port = 3306
-		}
-		if IsEmpty(yamlConf2.Sweet.MySqlConfig.User) {
-			yamlConf2.Sweet.MySqlConfig.User = "root"
-		}
-		if IsEmpty(yamlConf2.Sweet.MySqlConfig.Password) {
-			panic("mysql.password is empty")
-		}
-		if IsEmpty(yamlConf2.Sweet.MySqlConfig.DbName) {
-			panic("mysql.dbName is empty")
-		}
-		if yamlConf2.Sweet.MySqlConfig.MaxOpenConns == 0 {
-			yamlConf2.Sweet.MySqlConfig.MaxOpenConns = 100
-		}
-		if yamlConf2.Sweet.MySqlConfig.MaxIdleConns == 0 {
-			yamlConf2.Sweet.MySqlConfig.MaxIdleConns = 50
-		}
-	}
-
-	if yamlConf2.Sweet.RedisConfig.Active {
-		if IsEmpty(yamlConf2.Sweet.RedisConfig.Host) {
-			panic("redis.host is empty")
-		}
-		if yamlConf2.Sweet.RedisConfig.Port == 0 {
-			yamlConf2.Sweet.RedisConfig.Port = 6379
-		}
-		if yamlConf2.Sweet.RedisConfig.Database == 0 {
-			yamlConf2.Sweet.RedisConfig.Database = 0
-		}
-	}
-
-	if IsEmpty(yamlConf2.Sweet.Log.Level) {
-		yamlConf2.Sweet.Log.Level = "info"
-	}
-	switch yamlConf2.Sweet.Log.Level {
-	case "info":
-		break
-	case "warn":
-		break
-	case "error":
-		break
-	default:
-		panic("log.level is error, must be info/warn/error")
-	}
-
-	if IsEmpty(yamlConf2.Sweet.Log.File) {
-		yamlConf2.Sweet.Log.File = "logs/go-sweet.log"
-	}
-	if yamlConf2.Sweet.Log.MaxSize == 0 {
-		yamlConf2.Sweet.Log.MaxSize = 10
-	}
-	if yamlConf2.Sweet.Log.MaxBackups == 0 {
-		yamlConf2.Sweet.Log.MaxBackups = 10
-	}
-	if yamlConf2.Sweet.Log.MaxDays == 0 {
-		yamlConf2.Sweet.Log.MaxDays = 7
-	}
-
-	if yamlConf2.Sweet.Img.Path == "" {
-		panic("img.path is empty")
-	}
-
-	if IsEmpty(yamlConf2.Sweet.Img.MappingUrl) {
-		yamlConf2.Sweet.Img.MappingUrl = "/static"
-	}
-	if IsEmpty(yamlConf2.Sweet.Img.BaseUrl) {
-		yamlConf2.Sweet.Img.BaseUrl = fmt.Sprintf("http://localhost:%d", yamlConf2.Server.Port)
-	}
-
-	if IsEmpty(yamlConf2.Sweet.Img.Path) {
-		panic("img.path is empty")
-	}
-	return yamlConf2
-}
-
 func saveConf(yamlConf2 YmlConfig) {
 	if yamlConf2.Server.Port > 0 {
 		yamlConf.Server.Port = yamlConf2.Server.Port
@@ -174,9 +95,8 @@ func saveConf(yamlConf2 YmlConfig) {
 		}
 	}
 
-	yamlConf.Sweet.MySqlConfig.Active = yamlConf2.Sweet.MySqlConfig.Active
-
-	if yamlConf.Sweet.MySqlConfig.Active {
+	if yamlConf.Sweet.MySqlConfig.Active || yamlConf2.Sweet.MySqlConfig.Active {
+		yamlConf.Sweet.MySqlConfig.Active = true
 		if IsNotEmpty(yamlConf2.Sweet.MySqlConfig.Host) {
 			yamlConf.Sweet.MySqlConfig.Host = yamlConf2.Sweet.MySqlConfig.Host
 		} else {
@@ -232,8 +152,8 @@ func saveConf(yamlConf2 YmlConfig) {
 		}
 
 	}
-	yamlConf.Sweet.RedisConfig.Active = yamlConf2.Sweet.RedisConfig.Active
-	if yamlConf.Sweet.RedisConfig.Active {
+	if yamlConf.Sweet.RedisConfig.Active || yamlConf2.Sweet.RedisConfig.Active {
+		yamlConf.Sweet.RedisConfig.Active = true
 		if IsNotEmpty(yamlConf2.Sweet.RedisConfig.Host) {
 			yamlConf.Sweet.RedisConfig.Host = yamlConf2.Sweet.RedisConfig.Host
 		} else {
@@ -339,6 +259,96 @@ func saveConf(yamlConf2 YmlConfig) {
 
 	if len(yamlConf2.Sweet.ExcUrl.Full) > 0 {
 		yamlConf.Sweet.ExcUrl.Full = yamlConf2.Sweet.ExcUrl.Full
+	}
+
+	if yamlConf.Sweet.Adx.Active || yamlConf2.Sweet.Adx.Active {
+		yamlConf.Sweet.Adx.Active = true
+		if IsNotEmpty(yamlConf2.Sweet.Adx.Host) {
+			yamlConf.Sweet.Adx.Host = yamlConf2.Sweet.Adx.Host
+		} else {
+			if IsEmpty(yamlConf.Sweet.Adx.Host) {
+				panic("adx.host is empty")
+			}
+		}
+		if yamlConf.Sweet.Adx.LogActive || yamlConf2.Sweet.Adx.LogActive {
+			yamlConf.Sweet.Adx.LogActive = true
+		}
+
+		if IsNotEmpty(yamlConf2.Sweet.Adx.AuthMethod) {
+			yamlConf.Sweet.Adx.AuthMethod = yamlConf2.Sweet.Adx.AuthMethod
+		} else {
+			if IsEmpty(yamlConf.Sweet.Adx.AuthMethod) {
+				yamlConf.Sweet.Adx.AuthMethod = "AAK"
+			}
+		}
+		switch yamlConf.Sweet.Adx.AuthMethod {
+		case "AAK":
+			break
+		case "SMI":
+			break
+		default:
+			panic("Adx AuthMethod is error, must be AAK/SMI")
+		}
+
+		if yamlConf.Sweet.Adx.AuthMethod == "AAK" {
+			if IsNotEmpty(yamlConf2.Sweet.Adx.AppId) {
+				yamlConf.Sweet.Adx.AppId = yamlConf2.Sweet.Adx.AppId
+			} else {
+				if IsEmpty(yamlConf.Sweet.Adx.AppId) {
+					panic("adx.appId is empty")
+				}
+			}
+
+			if IsNotEmpty(yamlConf2.Sweet.Adx.AppKey) {
+				yamlConf.Sweet.Adx.AppKey = yamlConf2.Sweet.Adx.AppKey
+			} else {
+				if IsEmpty(yamlConf.Sweet.Adx.AppKey) {
+					panic("adx.appKey is empty")
+				}
+			}
+
+			if IsNotEmpty(yamlConf2.Sweet.Adx.AuthorityID) {
+				yamlConf.Sweet.Adx.AuthorityID = yamlConf2.Sweet.Adx.AuthorityID
+			} else {
+				if IsEmpty(yamlConf.Sweet.Adx.AuthorityID) {
+					panic("adx.authorityID is empty")
+				}
+			}
+		}
+	}
+
+	if yamlConf.Sweet.Mqtt.Active || yamlConf2.Sweet.Mqtt.Active {
+		yamlConf.Sweet.Mqtt.Active = true
+		if IsNotEmpty(yamlConf2.Sweet.Mqtt.Host) {
+			yamlConf.Sweet.Mqtt.Host = yamlConf2.Sweet.Mqtt.Host
+		} else {
+			if IsEmpty(yamlConf.Sweet.Mqtt.Host) {
+				panic("mqtt.host is empty")
+			}
+		}
+		if yamlConf2.Sweet.Mqtt.Port > 0 {
+			yamlConf.Sweet.Mqtt.Port = yamlConf2.Sweet.Mqtt.Port
+		} else {
+			if yamlConf.Sweet.Mqtt.Port == 0 {
+				yamlConf.Sweet.Mqtt.Port = 1883
+			}
+		}
+
+		if IsNotEmpty(yamlConf2.Sweet.Mqtt.User) {
+			yamlConf.Sweet.Mqtt.User = yamlConf2.Sweet.Mqtt.User
+		} else {
+			if IsEmpty(yamlConf.Sweet.Mqtt.User) {
+				panic("mqtt.user is empty")
+			}
+		}
+		if IsNotEmpty(yamlConf2.Sweet.Mqtt.Password) {
+			yamlConf.Sweet.Mqtt.Password = yamlConf2.Sweet.Mqtt.Password
+		} else {
+			if IsEmpty(yamlConf.Sweet.Mqtt.Password) {
+				panic("mqtt.password is empty")
+			}
+		}
+
 	}
 
 }

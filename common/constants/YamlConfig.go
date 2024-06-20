@@ -1,4 +1,6 @@
-package sweetyml
+package constants
+
+var YmlConf YmlConfig
 
 type YmlConfig struct {
 	Server Server `yaml:"server"`

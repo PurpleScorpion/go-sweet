@@ -42,6 +42,7 @@ sweet:
     maxBackups: 10 # 最大备份日志文件数量
 
   img:
+    active: true
     mappingUrl: /static # 映射的url 参考Tomcat映射图片地址配置
     path: D:/imgs
     baseUrl: http://localhost:20001

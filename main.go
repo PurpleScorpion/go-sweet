@@ -25,8 +25,9 @@ func init() {
 	web.BConfig.Listen.HTTPPort = conf.Server.Port
 	web.BConfig.AppName = conf.Server.Name
 	web.BConfig.CopyRequestBody = true
-
-	web.BConfig.WebConfig.StaticDir[conf.Sweet.Img.MappingUrl] = conf.Sweet.Img.Path
+	if conf.Sweet.Img.Active {
+		web.BConfig.WebConfig.StaticDir[conf.Sweet.Img.MappingUrl] = conf.Sweet.Img.Path
+	}
 
 	fullExcludeUrls = conf.Sweet.ExcUrl.Full
 	prefixExcludeUrls = conf.Sweet.ExcUrl.Prefix

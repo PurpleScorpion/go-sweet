@@ -40,6 +40,7 @@ func ReadYml() {
 	}
 	readChildConf()
 	initServer()
+	initConfData()
 }
 
 func initServer() {
@@ -47,6 +48,46 @@ func initServer() {
 	initRedis()
 	initAdx()
 	initMqtt()
+}
+
+func initConfData() {
+	constants.YmlConf.Server.Port = yamlConf.Server.Port
+	constants.YmlConf.Server.Name = yamlConf.Server.Name
+	constants.YmlConf.Server.Active = yamlConf.Server.Active
+	constants.YmlConf.Sweet.Img.Active = yamlConf.Sweet.Img.Active
+	constants.YmlConf.Sweet.Img.MappingUrl = yamlConf.Sweet.Img.MappingUrl
+	constants.YmlConf.Sweet.Img.Path = yamlConf.Sweet.Img.Path
+	constants.YmlConf.Sweet.Img.BaseUrl = yamlConf.Sweet.Img.BaseUrl
+	constants.YmlConf.Sweet.Log.File = yamlConf.Sweet.Log.File
+	constants.YmlConf.Sweet.Log.MaxSize = yamlConf.Sweet.Log.MaxSize
+	constants.YmlConf.Sweet.Log.MaxDays = yamlConf.Sweet.Log.MaxDays
+	constants.YmlConf.Sweet.Log.MaxBackups = yamlConf.Sweet.Log.MaxBackups
+	constants.YmlConf.Sweet.Log.Level = yamlConf.Sweet.Log.Level
+	constants.YmlConf.Sweet.MySqlConfig.Active = yamlConf.Sweet.MySqlConfig.Active
+	constants.YmlConf.Sweet.MySqlConfig.Host = yamlConf.Sweet.MySqlConfig.Host
+	constants.YmlConf.Sweet.MySqlConfig.Port = yamlConf.Sweet.MySqlConfig.Port
+	constants.YmlConf.Sweet.MySqlConfig.User = yamlConf.Sweet.MySqlConfig.User
+	constants.YmlConf.Sweet.MySqlConfig.Password = yamlConf.Sweet.MySqlConfig.Password
+	constants.YmlConf.Sweet.MySqlConfig.DbName = yamlConf.Sweet.MySqlConfig.DbName
+	constants.YmlConf.Sweet.MySqlConfig.MaxIdleConns = yamlConf.Sweet.MySqlConfig.MaxIdleConns
+	constants.YmlConf.Sweet.MySqlConfig.MaxOpenConns = yamlConf.Sweet.MySqlConfig.MaxOpenConns
+	constants.YmlConf.Sweet.RedisConfig.Active = yamlConf.Sweet.RedisConfig.Active
+	constants.YmlConf.Sweet.RedisConfig.Host = yamlConf.Sweet.RedisConfig.Host
+	constants.YmlConf.Sweet.RedisConfig.Port = yamlConf.Sweet.RedisConfig.Port
+	constants.YmlConf.Sweet.RedisConfig.Database = yamlConf.Sweet.RedisConfig.Database
+	constants.YmlConf.Sweet.RedisConfig.Password = yamlConf.Sweet.RedisConfig.Password
+	constants.YmlConf.Sweet.Adx.Active = yamlConf.Sweet.Adx.Active
+	constants.YmlConf.Sweet.Adx.Host = yamlConf.Sweet.Adx.Host
+	constants.YmlConf.Sweet.Adx.AppId = yamlConf.Sweet.Adx.AppId
+	constants.YmlConf.Sweet.Adx.AppKey = yamlConf.Sweet.Adx.AppKey
+	constants.YmlConf.Sweet.Adx.AuthorityID = yamlConf.Sweet.Adx.AuthorityID
+	constants.YmlConf.Sweet.Adx.AuthMethod = yamlConf.Sweet.Adx.AuthMethod
+	constants.YmlConf.Sweet.Adx.LogActive = yamlConf.Sweet.Adx.LogActive
+	constants.YmlConf.Sweet.Mqtt.Active = yamlConf.Sweet.Mqtt.Active
+	constants.YmlConf.Sweet.Mqtt.Host = yamlConf.Sweet.Mqtt.Host
+	constants.YmlConf.Sweet.Mqtt.Port = yamlConf.Sweet.Mqtt.Port
+	constants.YmlConf.Sweet.Mqtt.User = yamlConf.Sweet.Mqtt.User
+	constants.YmlConf.Sweet.Mqtt.Password = yamlConf.Sweet.Mqtt.Password
 }
 
 func GetYmlConf() YmlConfig {
@@ -229,27 +270,30 @@ func saveConf(yamlConf2 YmlConfig) {
 		}
 	}
 
-	if IsNotEmpty(yamlConf2.Sweet.Img.MappingUrl) {
-		yamlConf.Sweet.Img.MappingUrl = yamlConf2.Sweet.Img.MappingUrl
-	} else {
-		if IsEmpty(yamlConf.Sweet.Img.MappingUrl) {
-			yamlConf.Sweet.Img.MappingUrl = "/static"
+	if yamlConf.Sweet.Img.Active || yamlConf2.Sweet.Img.Active {
+		yamlConf.Sweet.Img.Active = true
+		if IsNotEmpty(yamlConf2.Sweet.Img.MappingUrl) {
+			yamlConf.Sweet.Img.MappingUrl = yamlConf2.Sweet.Img.MappingUrl
+		} else {
+			if IsEmpty(yamlConf.Sweet.Img.MappingUrl) {
+				yamlConf.Sweet.Img.MappingUrl = "/static"
+			}
 		}
-	}
 
-	if IsNotEmpty(yamlConf2.Sweet.Img.Path) {
-		yamlConf.Sweet.Img.Path = yamlConf2.Sweet.Img.Path
-	} else {
-		if IsEmpty(yamlConf.Sweet.Img.Path) {
-			panic("img.path is empty")
+		if IsNotEmpty(yamlConf2.Sweet.Img.Path) {
+			yamlConf.Sweet.Img.Path = yamlConf2.Sweet.Img.Path
+		} else {
+			if IsEmpty(yamlConf.Sweet.Img.Path) {
+				panic("img.path is empty")
+			}
 		}
-	}
 
-	if IsNotEmpty(yamlConf2.Sweet.Img.BaseUrl) {
-		yamlConf.Sweet.Img.BaseUrl = yamlConf2.Sweet.Img.BaseUrl
-	} else {
-		if IsEmpty(yamlConf.Sweet.Img.BaseUrl) {
-			yamlConf.Sweet.Img.BaseUrl = fmt.Sprintf("http://localhost:%d", yamlConf.Server.Port)
+		if IsNotEmpty(yamlConf2.Sweet.Img.BaseUrl) {
+			yamlConf.Sweet.Img.BaseUrl = yamlConf2.Sweet.Img.BaseUrl
+		} else {
+			if IsEmpty(yamlConf.Sweet.Img.BaseUrl) {
+				yamlConf.Sweet.Img.BaseUrl = fmt.Sprintf("http://localhost:%d", yamlConf.Server.Port)
+			}
 		}
 	}
 

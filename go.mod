@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/PurpleScorpion/go-sweet-json v1.0.1
-	github.com/PurpleScorpion/go-sweet-orm v1.0.15
+	github.com/PurpleScorpion/go-sweet-orm v1.0.16
 	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.8.1

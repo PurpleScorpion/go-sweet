@@ -16,6 +16,7 @@ github.com/PurpleScorpion/go-sweet-json v1.0.1 h1:FGBOdZd0qZCyx9kOHc84PhvG4Pa1+L
 github.com/PurpleScorpion/go-sweet-json v1.0.1/go.mod h1:nPtlqd2d5uJS7MGYbgVF/0SInCkHZ/wmEwr4+AmXF70=
 github.com/PurpleScorpion/go-sweet-orm v1.0.15 h1:/w+8X49v+u9YteSIyo+WX5NB/9ifmTns+ePDs298ubM=
 github.com/PurpleScorpion/go-sweet-orm v1.0.15/go.mod h1:A+dwrdaQ3NXhXAJaNwcv/48MFj3NHXO8eARxuuOMPug=
+github.com/PurpleScorpion/go-sweet-orm v1.0.16/go.mod h1:A+dwrdaQ3NXhXAJaNwcv/48MFj3NHXO8eARxuuOMPug=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=

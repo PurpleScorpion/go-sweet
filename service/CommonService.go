@@ -8,7 +8,11 @@ import (
 )
 
 // yml配置文件内容
-var ymlConf constants.YmlConfig
+var ymlConf = constants.YmlConf
+
+func ServiceInit() {
+	ymlConf = constants.YmlConf
+}
 
 func MqttOnlineTest(client MQTT.Client, msg MQTT.Message) {
 	payload := string(msg.Payload())

@@ -7,6 +7,7 @@ import (
 	"go-sweet/common/utils"
 	sweetyml "go-sweet/common/yaml"
 	_ "go-sweet/routers"
+	"go-sweet/service"
 	"net/http"
 	"strings"
 	"time"
@@ -31,6 +32,7 @@ func init() {
 
 	fullExcludeUrls = conf.Sweet.ExcUrl.Full
 	prefixExcludeUrls = conf.Sweet.ExcUrl.Prefix
+	service.ServiceInit()
 }
 
 func main() {

@@ -35,7 +35,7 @@ func initMqtt() {
 	if !conf.Sweet.Mqtt.Active {
 		return
 	}
-
+	logs.Info("Init MQTT....")
 	mqttServer := conf.Sweet.Mqtt.Host
 	mqttPort := conf.Sweet.Mqtt.Port
 	mqttUsername := conf.Sweet.Mqtt.User     // cooldesign

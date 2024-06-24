@@ -10,9 +10,10 @@ var (
 	FAIL_STATUS   int32 = 0 // 失效
 
 	// beego需要的环境变量
-	IMG_BASE_PATH string = "IMG_BASE_PATH" // 图片的基础路径 https开头
-	BEEGO_RUNMODE string = "BEEGO_RUNMODE" // 当前环境 固定值 prod
-	CONF_PATH     string = "CONF_PATH"
+	IMG_BASE_PATH   string = "IMG_BASE_PATH" // 图片的基础路径 https开头
+	BEEGO_RUNMODE   string = "BEEGO_RUNMODE" // 当前环境 固定值 prod
+	CONF_PATH       string = "CONF_PATH"
+	PROFILES_ACTIVE string = "PROFILES_ACTIVE"
 
 	HEALTH_CHECK_KEY     string = "HEALTH_CHECK_"
 	USER_EXPIRE_TIME_KEY string = "USER_EXPIRE_TIME_"

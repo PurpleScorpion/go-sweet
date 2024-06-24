@@ -2,17 +2,21 @@ package sweetyml
 
 import (
 	"fmt"
+	"github.com/beego/beego/v2/core/logs"
 	"go-sweet/common/constants"
 	"gopkg.in/yaml.v3"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 var yamlConf YmlConfig
 
 func ReadYml() {
+	start := time.Now().UnixMilli()
+	printBanner()
 	confPath := os.Getenv(constants.CONF_PATH)
 
 	if IsEmpty(confPath) {
@@ -39,8 +43,14 @@ func ReadYml() {
 		panic("server.active is empty")
 	}
 	readChildConf()
+	logs.Info("The following profiles are active: %s", yamlConf.Server.Active)
+	logs.Info("Golang server initialized with port(s): %d (http)", yamlConf.Server.Port)
 	initServer()
+	logs.Info("Starting service [Golang server]")
 	initConfData()
+	end := time.Now().UnixMilli()
+	logs.Info("Server started on port(s): %d (http) with context path '/'", yamlConf.Server.Port)
+	logs.Info("Started Application in %d millisecond", (end - start))
 }
 
 func initServer() {
@@ -48,6 +58,31 @@ func initServer() {
 	initRedis()
 	initAdx()
 	initMqtt()
+}
+
+func printBanner() {
+	confPath := os.Getenv(constants.CONF_PATH)
+	if IsEmpty(confPath) {
+		confPath = "conf/banner.txt"
+		absPath, err := filepath.Abs(confPath)
+		if err != nil {
+			log.Fatalf("failed to get absolute path: %v", err)
+		}
+		confPath = absPath
+	} else {
+		confPath = confPath + "/conf/banner.txt"
+	}
+
+	file, err := os.ReadFile(confPath)
+	if err != nil {
+		fmt.Println("===========================================================================")
+		fmt.Println(" ")
+		var str = "   _____                            _   \n  / ____|                          | |  \n | (___   __      __   ___    ___  | |_ \n  \\___ \\  \\ \\ /\\ / /  / _ \\  / _ \\ | __|\n  ____) |  \\ V  V /  |  __/ |  __/ | |_ \n |_____/    \\_/\\_/    \\___|  \\___|  \\__|\n                                        \n                                        "
+		fmt.Println(str)
+		fmt.Println("===========================================================================")
+		return
+	}
+	fmt.Println(string(file))
 }
 
 func initConfData() {
@@ -93,10 +128,32 @@ func initConfData() {
 func GetYmlConf() YmlConfig {
 	return yamlConf
 }
+func getEnvActive() string {
+	//profilesActive := "dev"
+	profilesActive := os.Getenv(constants.PROFILES_ACTIVE)
+	confPath := os.Getenv(constants.CONF_PATH)
+	if IsEmpty(confPath) {
+		confPath = "conf/application-" + profilesActive + ".yml"
+	} else {
+		confPath = confPath + "/conf/application-" + profilesActive + ".yml"
+	}
+
+	if IsNotEmpty(profilesActive) {
+		absPath, err := filepath.Abs(confPath)
+		if err == nil {
+			_, err1 := os.ReadFile(absPath)
+			if err1 == nil {
+				return profilesActive
+			}
+		}
+	}
+	return yamlConf.Server.Active
+}
 
 func readChildConf() {
 	var yamlConf2 YmlConfig
 	confPath := os.Getenv(constants.CONF_PATH)
+	yamlConf.Server.Active = getEnvActive()
 
 	if IsEmpty(confPath) {
 		confPath = "conf/application-" + yamlConf.Server.Active + ".yml"

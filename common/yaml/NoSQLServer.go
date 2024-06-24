@@ -3,6 +3,7 @@ package sweetyml
 import (
 	"context"
 	"fmt"
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/go-redis/redis/v8"
 	"go-sweet/common/utils"
 	"log"
@@ -13,7 +14,7 @@ func initRedis() {
 	if !conf.Sweet.RedisConfig.Active {
 		return
 	}
-
+	logs.Info("Init Redis....")
 	addr := fmt.Sprintf("%s:%d", conf.Sweet.RedisConfig.Host, conf.Sweet.RedisConfig.Port)
 	pwd := conf.Sweet.RedisConfig.Password
 

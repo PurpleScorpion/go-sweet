@@ -5,6 +5,7 @@ import (
 	"github.com/Azure/azure-kusto-go/kusto"
 	"github.com/PurpleScorpion/go-sweet-orm/mapper"
 	"github.com/beego/beego/orm"
+	"github.com/beego/beego/v2/core/logs"
 	_ "github.com/go-sql-driver/mysql"
 	"go-sweet/common/utils"
 )
@@ -18,6 +19,7 @@ func initMySQL() {
 	if !conf.Sweet.MySqlConfig.Active {
 		return
 	}
+	logs.Info("Init MySQL....")
 	username := conf.Sweet.MySqlConfig.User
 	password := conf.Sweet.MySqlConfig.Password
 	host := conf.Sweet.MySqlConfig.Host
@@ -38,7 +40,7 @@ func initAdx() {
 	if !conf.Sweet.Adx.Active {
 		return
 	}
-
+	logs.Info("Init Adx....")
 	if conf.Sweet.Adx.AuthMethod == "SMI" {
 		kcsb = kusto.NewConnectionStringBuilder(conf.Sweet.Adx.Host).WithSystemManagedIdentity()
 	} else {

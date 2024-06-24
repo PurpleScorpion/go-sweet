@@ -61,9 +61,31 @@ func readLog() {
 	readChildConf()
 }
 
+func getEnvActive() string {
+	profilesActive := os.Getenv(constants.PROFILES_ACTIVE)
+	confPath := os.Getenv(constants.CONF_PATH)
+	if IsEmpty(confPath) {
+		confPath = "conf/application-" + profilesActive + ".yml"
+	} else {
+		confPath = confPath + "/conf/application-" + profilesActive + ".yml"
+	}
+
+	if IsNotEmpty(profilesActive) {
+		absPath, err := filepath.Abs(confPath)
+		if err == nil {
+			_, err1 := os.ReadFile(absPath)
+			if err1 == nil {
+				return profilesActive
+			}
+		}
+	}
+	return yamlConf.Server.Active
+}
+
 func readChildConf() {
 	var yamlConf2 YmlConfig
 	confPath := os.Getenv(constants.CONF_PATH)
+	yamlConf.Server.Active = getEnvActive()
 
 	if IsEmpty(confPath) {
 		confPath = "conf/application-" + yamlConf.Server.Active + ".yml"

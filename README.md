@@ -241,3 +241,23 @@ func GetCache(key string) string {}
 该函数为整个项目的入口,运行项目时应该在cmd中进入该文件所在目录 , 并使用 ./main.go运行
 该函数包含跨域配置/权限拦截/恐慌函数配置/yaml配置文件初始化
 ```
+
+- 类似于Java中的@Value()在go中的使用
+```text
+在yaml配置文件中,所有配置项都可以通过utils包下的YamlUtil.go中的方法获取
+    所有函数的统一传值方式与Java中的@Value()注解一致 -- 例如: ${sweet.img.baseUrl} , 注意这是字符串
+    详细使用方式分别在CommonService和CommonUtil中 
+    建议所有获取值的方式都是用该方式获取, 初始化数据由系统启动时承担 , 若直接卸载代码中 , 则会产生额外开销
+    方法介绍:
+    注: 因参数一致,因此不再写参数介绍
+    ValueObject: 获取interface{}类型的结果, 相当于Java中的Object
+    ValueString: 获取string类型的结果
+    ValueInt: 获取int类型的结果
+    ValueInt32: 获取int32类型的结果
+    ValueInt64: 获取int64类型的结果
+    ValueFloat32: 获取float32类型的结果
+    ValueFloat64: 获取float64类型的结果
+    ValueBool: 获取bool类型的结果
+    ValueStringArr: 获取[]string类型的结果
+    因其他Array类型使用场景较少, 因此不提供其他获取数组的函数,若需要, 请自行添加
+```

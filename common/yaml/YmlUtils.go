@@ -2,6 +2,7 @@ package sweetyml
 
 import (
 	"fmt"
+	cache "github.com/PurpleScorpion/go-sweet-cache"
 	"github.com/beego/beego/v2/core/logs"
 	"go-sweet/common/constants"
 	"gopkg.in/yaml.v3"
@@ -42,12 +43,16 @@ func ReadYml() {
 	if IsEmpty(yamlConf.Server.Active) {
 		panic("server.active is empty")
 	}
+	var conf1 = make(map[string]interface{})
+	yaml.Unmarshal(data, &conf1)
+	cache.New(cache.NoExpiration, cache.NoExpiration)
+	cache.SweetCache.Set("ymlConf", conf1, cache.NoExpiration)
+
 	readChildConf()
 	logs.Info("The following profiles are active: %s", yamlConf.Server.Active)
 	logs.Info("Golang server initialized with port(s): %d (http)", yamlConf.Server.Port)
 	initServer()
 	logs.Info("Starting service [Golang server]")
-	initConfData()
 	end := time.Now().UnixMilli()
 	logs.Info("Server started on port(s): %d (http) with context path '/'", yamlConf.Server.Port)
 	logs.Info("Started Application in %d millisecond", (end - start))
@@ -83,46 +88,6 @@ func printBanner() {
 		return
 	}
 	fmt.Println(string(file))
-}
-
-func initConfData() {
-	constants.YmlConf.Server.Port = yamlConf.Server.Port
-	constants.YmlConf.Server.Name = yamlConf.Server.Name
-	constants.YmlConf.Server.Active = yamlConf.Server.Active
-	constants.YmlConf.Sweet.Img.Active = yamlConf.Sweet.Img.Active
-	constants.YmlConf.Sweet.Img.MappingUrl = yamlConf.Sweet.Img.MappingUrl
-	constants.YmlConf.Sweet.Img.Path = yamlConf.Sweet.Img.Path
-	constants.YmlConf.Sweet.Img.BaseUrl = yamlConf.Sweet.Img.BaseUrl
-	constants.YmlConf.Sweet.Log.File = yamlConf.Sweet.Log.File
-	constants.YmlConf.Sweet.Log.MaxSize = yamlConf.Sweet.Log.MaxSize
-	constants.YmlConf.Sweet.Log.MaxDays = yamlConf.Sweet.Log.MaxDays
-	constants.YmlConf.Sweet.Log.MaxBackups = yamlConf.Sweet.Log.MaxBackups
-	constants.YmlConf.Sweet.Log.Level = yamlConf.Sweet.Log.Level
-	constants.YmlConf.Sweet.MySqlConfig.Active = yamlConf.Sweet.MySqlConfig.Active
-	constants.YmlConf.Sweet.MySqlConfig.Host = yamlConf.Sweet.MySqlConfig.Host
-	constants.YmlConf.Sweet.MySqlConfig.Port = yamlConf.Sweet.MySqlConfig.Port
-	constants.YmlConf.Sweet.MySqlConfig.User = yamlConf.Sweet.MySqlConfig.User
-	constants.YmlConf.Sweet.MySqlConfig.Password = yamlConf.Sweet.MySqlConfig.Password
-	constants.YmlConf.Sweet.MySqlConfig.DbName = yamlConf.Sweet.MySqlConfig.DbName
-	constants.YmlConf.Sweet.MySqlConfig.MaxIdleConns = yamlConf.Sweet.MySqlConfig.MaxIdleConns
-	constants.YmlConf.Sweet.MySqlConfig.MaxOpenConns = yamlConf.Sweet.MySqlConfig.MaxOpenConns
-	constants.YmlConf.Sweet.RedisConfig.Active = yamlConf.Sweet.RedisConfig.Active
-	constants.YmlConf.Sweet.RedisConfig.Host = yamlConf.Sweet.RedisConfig.Host
-	constants.YmlConf.Sweet.RedisConfig.Port = yamlConf.Sweet.RedisConfig.Port
-	constants.YmlConf.Sweet.RedisConfig.Database = yamlConf.Sweet.RedisConfig.Database
-	constants.YmlConf.Sweet.RedisConfig.Password = yamlConf.Sweet.RedisConfig.Password
-	constants.YmlConf.Sweet.Adx.Active = yamlConf.Sweet.Adx.Active
-	constants.YmlConf.Sweet.Adx.Host = yamlConf.Sweet.Adx.Host
-	constants.YmlConf.Sweet.Adx.AppId = yamlConf.Sweet.Adx.AppId
-	constants.YmlConf.Sweet.Adx.AppKey = yamlConf.Sweet.Adx.AppKey
-	constants.YmlConf.Sweet.Adx.AuthorityID = yamlConf.Sweet.Adx.AuthorityID
-	constants.YmlConf.Sweet.Adx.AuthMethod = yamlConf.Sweet.Adx.AuthMethod
-	constants.YmlConf.Sweet.Adx.LogActive = yamlConf.Sweet.Adx.LogActive
-	constants.YmlConf.Sweet.Mqtt.Active = yamlConf.Sweet.Mqtt.Active
-	constants.YmlConf.Sweet.Mqtt.Host = yamlConf.Sweet.Mqtt.Host
-	constants.YmlConf.Sweet.Mqtt.Port = yamlConf.Sweet.Mqtt.Port
-	constants.YmlConf.Sweet.Mqtt.User = yamlConf.Sweet.Mqtt.User
-	constants.YmlConf.Sweet.Mqtt.Password = yamlConf.Sweet.Mqtt.Password
 }
 
 func GetYmlConf() YmlConfig {
@@ -173,6 +138,9 @@ func readChildConf() {
 	if err != nil {
 		log.Fatalf("error parsing YAML: %v", err)
 	}
+	var conf1 = make(map[string]interface{})
+	yaml.Unmarshal(data, &conf1)
+	cache.SweetCache.Set("ymlConf2", conf1, cache.NoExpiration)
 	//yamlConf2 = defaultData(yamlConf2)
 	saveConf(yamlConf2)
 }

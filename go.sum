@@ -12,6 +12,8 @@ github.com/AzureAD/microsoft-authentication-library-for-go v1.2.0 h1:hVeq+yCyUi+
 github.com/AzureAD/microsoft-authentication-library-for-go v1.2.0/go.mod h1:wP83P5OoQ5p6ip3ScPr0BAq0BvuPAvacpEuSzyouqAI=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Knetic/govaluate v3.0.0+incompatible/go.mod h1:r7JcOSlj0wfOMncg0iLm8Leh48TZaKVeNIfJntJ2wa0=
+github.com/PurpleScorpion/go-sweet-cache v0.0.1 h1:EDkANHd32kaTK2dCRKNQL7P+Egv3ObUlcJf7hrkyPVE=
+github.com/PurpleScorpion/go-sweet-cache v0.0.1/go.mod h1:lCWIPJsdhRQw7/y3537FUYqqjYtqqEOco9iDFeoIWZo=
 github.com/PurpleScorpion/go-sweet-json v1.0.1 h1:FGBOdZd0qZCyx9kOHc84PhvG4Pa1+LDMOx9da+Ma3D8=
 github.com/PurpleScorpion/go-sweet-json v1.0.1/go.mod h1:nPtlqd2d5uJS7MGYbgVF/0SInCkHZ/wmEwr4+AmXF70=
 github.com/PurpleScorpion/go-sweet-orm v1.0.15 h1:/w+8X49v+u9YteSIyo+WX5NB/9ifmTns+ePDs298ubM=

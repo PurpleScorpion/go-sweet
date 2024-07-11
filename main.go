@@ -33,6 +33,7 @@ func init() {
 	fullExcludeUrls = conf.Sweet.ExcUrl.Full
 	prefixExcludeUrls = conf.Sweet.ExcUrl.Prefix
 	service.ServiceInit()
+	utils.InitUtils()
 }
 
 func main() {

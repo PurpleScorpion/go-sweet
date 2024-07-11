@@ -247,7 +247,7 @@ func GetCache(key string) string {}
 在yaml配置文件中,所有配置项都可以通过utils包下的YamlUtil.go中的方法获取
     所有函数的统一传值方式与Java中的@Value()注解一致 -- 例如: ${sweet.img.baseUrl} , 注意这是字符串
     详细使用方式分别在CommonService和CommonUtil中 
-    建议所有获取值的方式都是用该方式获取, 初始化数据由系统启动时承担 , 若直接卸载代码中 , 则会产生额外开销
+    建议所有获取值的方式都是用该方式获取, 初始化数据由系统启动时承担 , 若直接写在代码中 , 则会产生额外开销
     方法介绍:
     注: 因参数一致,因此不再写参数介绍
     ValueObject: 获取interface{}类型的结果, 相当于Java中的Object

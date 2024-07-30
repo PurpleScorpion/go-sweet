@@ -2,10 +2,10 @@ package routers
 
 import (
 	beego "github.com/beego/beego/v2/server/web"
-	"go-sweet/controllers"
+	"sweet-src/main/golang/controllers"
 )
 
-func init() {
+func InitRouters() {
 	beego.Router("/login", &controllers.UserController{}, "post:Login")
 	beego.Router("/rePassword", &controllers.UserController{}, "post:RePassword")
 	beego.Router("/sys/user/healthCheck", &controllers.UserController{}, "get:HealthCheck")

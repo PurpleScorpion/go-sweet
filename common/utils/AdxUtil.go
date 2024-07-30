@@ -6,9 +6,9 @@ import (
 	"github.com/Azure/azure-kusto-go/kusto"
 	"github.com/Azure/azure-kusto-go/kusto/kql"
 	"github.com/PurpleScorpion/go-sweet-json/jsonutil"
-	"go-sweet/common/logger"
 	"io"
 	"log"
+	"sweet-common/logger"
 	"time"
 )
 

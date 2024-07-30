@@ -4,12 +4,12 @@ import (
 	"fmt"
 	cache "github.com/PurpleScorpion/go-sweet-cache"
 	"github.com/beego/beego/v2/core/logs"
-	"go-sweet/common/constants"
 	"gopkg.in/yaml.v3"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
+	"sweet-common/constants"
 	"time"
 )
 
@@ -18,17 +18,18 @@ var yamlConf YmlConfig
 func ReadYml() {
 	start := time.Now().UnixMilli()
 	printBanner()
-	confPath := os.Getenv(constants.CONF_PATH)
+	profilesActive := os.Getenv(constants.PROFILES_ACTIVE)
+	confPath := ""
 
-	if IsEmpty(confPath) {
-		confPath = "conf/application.yml"
+	if IsEmpty(profilesActive) {
+		confPath = "src/main/resources/application.yml"
 		absPath, err := filepath.Abs(confPath)
 		if err != nil {
 			log.Fatalf("failed to get absolute path: %v", err)
 		}
 		confPath = absPath
 	} else {
-		confPath = confPath + "/conf/application.yml"
+		confPath = "conf/application.yml"
 	}
 
 	data, err := os.ReadFile(confPath)
@@ -66,16 +67,17 @@ func initServer() {
 }
 
 func printBanner() {
-	confPath := os.Getenv(constants.CONF_PATH)
-	if IsEmpty(confPath) {
-		confPath = "conf/banner.txt"
+	profilesActive := os.Getenv(constants.PROFILES_ACTIVE)
+	confPath := ""
+	if IsEmpty(profilesActive) {
+		confPath = "src/main/resources/banner.txt"
 		absPath, err := filepath.Abs(confPath)
 		if err != nil {
 			log.Fatalf("failed to get absolute path: %v", err)
 		}
 		confPath = absPath
 	} else {
-		confPath = confPath + "/conf/banner.txt"
+		confPath = "conf/banner.txt"
 	}
 
 	file, err := os.ReadFile(confPath)
@@ -96,11 +98,11 @@ func GetYmlConf() YmlConfig {
 func getEnvActive() string {
 	//profilesActive := "dev"
 	profilesActive := os.Getenv(constants.PROFILES_ACTIVE)
-	confPath := os.Getenv(constants.CONF_PATH)
-	if IsEmpty(confPath) {
-		confPath = "conf/application-" + profilesActive + ".yml"
+	confPath := ""
+	if IsEmpty(profilesActive) {
+		confPath = "src/main/resources/application-" + profilesActive + ".yml"
 	} else {
-		confPath = confPath + "/conf/application-" + profilesActive + ".yml"
+		confPath = "conf/application-" + profilesActive + ".yml"
 	}
 
 	if IsNotEmpty(profilesActive) {
@@ -117,18 +119,19 @@ func getEnvActive() string {
 
 func readChildConf() {
 	var yamlConf2 YmlConfig
-	confPath := os.Getenv(constants.CONF_PATH)
+	profilesActive := os.Getenv(constants.PROFILES_ACTIVE)
+	confPath := ""
 	yamlConf.Server.Active = getEnvActive()
 
-	if IsEmpty(confPath) {
-		confPath = "conf/application-" + yamlConf.Server.Active + ".yml"
+	if IsEmpty(profilesActive) {
+		confPath = "src/main/resources/application-" + yamlConf.Server.Active + ".yml"
 		absPath, err := filepath.Abs(confPath)
 		if err != nil {
 			log.Fatalf("failed to get absolute path: %v", err)
 		}
 		confPath = absPath
 	} else {
-		confPath = confPath + "/conf/application-" + yamlConf.Server.Active + ".yml"
+		confPath = "conf/application-" + yamlConf.Server.Active + ".yml"
 	}
 	data, err := os.ReadFile(confPath)
 	if err != nil {

@@ -4,7 +4,7 @@ import (
 	"github.com/PurpleScorpion/go-sweet-json/jsonutil"
 	beego "github.com/beego/beego/v2/server/web"
 	"github.com/beego/beego/v2/server/web/context"
-	"go-sweet/common/utils"
+	"sweet-common/utils"
 )
 
 type BaseController struct {

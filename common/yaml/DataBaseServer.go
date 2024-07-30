@@ -7,7 +7,7 @@ import (
 	"github.com/beego/beego/orm"
 	"github.com/beego/beego/v2/core/logs"
 	_ "github.com/go-sql-driver/mysql"
-	"go-sweet/common/utils"
+	"sweet-common/utils"
 )
 
 var (

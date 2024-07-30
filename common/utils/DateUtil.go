@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"go-sweet/common/constants"
+	"sweet-common/constants"
 	"time"
 )
 

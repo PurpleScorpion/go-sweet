@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"github.com/beego/beego/v2/core/logs"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
-	"go-sweet/common/utils"
-	"go-sweet/service"
 	"math/rand"
 	"net/url"
+	"sweet-common/utils"
+	"sweet-src/main/golang/service"
 	"time"
 )
 

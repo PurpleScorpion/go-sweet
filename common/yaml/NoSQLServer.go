@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/go-redis/redis/v8"
-	"go-sweet/common/utils"
 	"log"
+	"sweet-common/utils"
 )
 
 func initRedis() {

@@ -4,12 +4,12 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
-	"go-sweet/common/constants"
 	"math/rand"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
+	"sweet-common/constants"
 	"time"
 )
 

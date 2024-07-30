@@ -2,10 +2,10 @@ package service
 
 import (
 	"github.com/PurpleScorpion/go-sweet-orm/mapper"
-	"go-sweet/common/constants"
-	"go-sweet/common/utils"
-	"go-sweet/common/vo"
-	"go-sweet/models"
+	"sweet-common/constants"
+	"sweet-common/utils"
+	"sweet-common/vo"
+	"sweet-src/main/golang/models"
 )
 
 type SystemService struct {

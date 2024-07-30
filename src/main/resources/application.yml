@@ -1,0 +1,15 @@
+server:
+  name: go-sweet
+  active: dev
+
+sweet:
+  # IP白名单, -1.-1.-1.-1代表该白名单无效化 , 0.0.0.0代表所有IP都为白名单(慎用)
+  # IP范围模式支持 192.168.1.0/24 这种写法 , 这种写法遵循 CIDR 规范
+  whitelist:
+    - -1.-1.-1.-1
+
+  excludeUrl:
+    prefix:
+      - /static/
+    full:
+      - /login

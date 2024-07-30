@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"encoding/json"
-	"go-sweet/common/vo"
-	"go-sweet/models"
-	"go-sweet/service"
+	"sweet-common/vo"
+	"sweet-src/main/golang/models"
+	"sweet-src/main/golang/service"
 )
 
 type SystemController struct {

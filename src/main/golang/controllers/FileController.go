@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"github.com/PurpleScorpion/go-sweet-json/jsonutil"
-	"go-sweet/common/constants"
-	"go-sweet/common/utils"
-	sweetyml "go-sweet/common/yaml"
 	"io"
 	"os"
+	"sweet-common/constants"
+	"sweet-common/utils"
+	sweetyml "sweet-common/yaml"
 )
 
 type FileController struct {

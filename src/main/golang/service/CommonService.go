@@ -4,7 +4,7 @@ import (
 	"fmt"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 	_ "github.com/go-sql-driver/mysql"
-	"go-sweet/common/utils"
+	"sweet-common/utils"
 )
 
 // yml配置文件内容

@@ -22,26 +22,33 @@ go version 1.20
 
 ## 目录结构
 ```text
-    - common # 公共模块
+    - common # 公共模块 - 分包go.mod
         - constants     # 常量包
         - logger        # 日志包
         - utils         # 工具包
         - vo            # vo包
         - yaml          # yaml配置文件处理包 - 一般无需理会
-    - conf              # 配置文件包 - 内容参考java的SpringBoot
-        - application.yml       # 以下配置文件将会在下面详细介绍
-        - application-dev.yml
-        - application-prod.yml
-        - application-test.yml
-    - controller                # controller 包
-        - BaseController.go     # 基础controller
-        - FileController.go     # 图片上传相关模块 可自行添加其他文件上传相关内容
-        - SystemController.go   # 系统相关模块(权限控制)
-        - UserController.go     # 登录相关模块
-    - models            # 数据库模型包
-    - routers           # 路由包
-    - service           # 业务逻辑包
+        - go.mod            # go.mod
+    - src
+        - main
+            - golang
+                - controller                # controller 包
+                    - BaseController.go     # 基础controller
+                    - FileController.go     # 图片上传相关模块 可自行添加其他文件上传相关内容
+                    - SystemController.go   # 系统相关模块(权限控制)
+                    - UserController.go     # 登录相关模块
+                - models            # 数据库模型包
+                - routers           # 路由包
+                - service           # 业务逻辑包
+            - resources # 配置文件包 - 内容参考java的SpringBoot
+                - application.yml       # 以下配置文件将会在下面详细介绍
+                - application-dev.yml
+                - application-prod.yml
+                - application-test.yml
+        - test
+        - go.mod            # go.mod
     - go.mod            # go.mod
+    - go.work           # go.work
     - main.go           # 程序主入口
 ```
 
@@ -89,7 +96,7 @@ application.yml文件的配置与优先级
 application-环境名.yml配置值的优先级永远大于application.yml配置值
 但是在application-环境名.yml的配置值中 , 不可以配置active的值 , 配置了也不会生效
 除此之外 , 其他的配置皆可以覆盖application.yml的配置值
-以下是全部配置值的释义
+以下是全部配置值的释义(先新增自定义配置方式,请看最后一条Java中的@Value()在go中的使用)
 server:
   name: go-sweet # 项目名称                           选填: 默认值go-sweet
   active: dev    # 当前环境
@@ -184,6 +191,7 @@ sweet:
     # 完全匹配排除
     full:
       - /login # 登录接口 一般必填
+
 ```
 
 - controller

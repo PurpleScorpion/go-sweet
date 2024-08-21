@@ -47,6 +47,7 @@ go version 1.20
                 - application-test.yml
         - test
         - go.mod            # go.mod
+    - Demo_test.go      # 单元测试类
     - go.mod            # go.mod
     - go.work           # go.work
     - main.go           # 程序主入口

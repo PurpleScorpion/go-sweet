@@ -11,7 +11,7 @@ type UserController struct {
 	BaseController
 }
 
-var userService = service.UserService{}
+var userService service.UserService
 
 func (that *UserController) Login() {
 	var user models.User

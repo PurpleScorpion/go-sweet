@@ -63,6 +63,8 @@ go version 1.20
 ```text
 使用beego的日志模块进行记录 , 在打印日志的同时会将日志记录到文件中
 使用方式 logger.Info("日志内容")
+进阶使用方式: logger.Info("日志内容: %d, %s", 123, "参数2")
+keqing工具类使用方式: logger.Info("日志内容: %s", keqing.ToString(obj))
 ```
 - yaml 配置文件处理包
 ```text
@@ -103,8 +105,6 @@ server:
   active: dev    # 当前环境
 sweet:
   mysql:
-    # 必填
-    active: true  # 是否激活使用mysql配置           
     # 必填       
     host: 192.168.253.130  # mysql地址     
     # 选填: 默认值3306                  
@@ -121,8 +121,6 @@ sweet:
     maxOpenConns: 100 # 最大打开连接数               
 
   redis:
-    # 必填 
-    active: true #是否激活使用redis配置  
     # 必填               
     host: 192.168.253.130 # redis地址
     # 选填: 默认值6379
@@ -133,8 +131,6 @@ sweet:
     database: 2  # redis使用的数据库
   
   adx:
-    # 必填 
-    active: true #是否激活使用adx配置 
     # 必填               
     host: https://your.adx.com # adx地址 https开头
     # 选填: 默认值AAK 可选值: AAK/SMI
@@ -149,8 +145,6 @@ sweet:
     logActive: true
   
   mqtt:
-    # 必填 
-    active: true #是否激活使用mqtt配置 
      # 必填               
     host: 192.168.253.130 # mqtt地址
     # 选填: 默认值1883
@@ -194,6 +188,9 @@ sweet:
       - /login # 登录接口 一般必填
 
 ```
+
+- controller/models/service层级建议使用go-sweet-generator进行代码生成,
+- github地址: https://github.com/PurpleScorpion/go-sweet-generator
 
 - controller
 ```text

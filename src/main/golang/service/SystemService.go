@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/PurpleScorpion/go-sweet-keqing/keqing"
 	"github.com/PurpleScorpion/go-sweet-orm/mapper"
 	"sweet-common/constants"
 	"sweet-common/utils"
@@ -14,7 +15,7 @@ type SystemService struct {
 func (that *SystemService) UserPageData(userVO vo.UserPageVO) utils.R {
 	var list []models.User
 	qw := mapper.BuilderQueryWrapper(&list)
-	qw.Like(utils.IsNotEmpty(userVO.Username), "username", userVO.Username)
+	qw.Like(keqing.IsNotEmpty(userVO.Username), "username", userVO.Username)
 	qw.Ne(true, "role", constants.ROOT_ROLE_ID)
 	qw.Eq(true, "deleted", constants.NO_DELETE_CODE)
 	page := mapper.BuilderPageUtils(userVO.Current, userVO.PageSize, qw)
@@ -46,7 +47,7 @@ func (that *SystemService) UserPageData(userVO vo.UserPageVO) utils.R {
 func (that *SystemService) RolePageData(roleVO vo.RolePageVO) utils.R {
 	var list []models.SysRole
 	qw := mapper.BuilderQueryWrapper(&list)
-	qw.Like(utils.IsNotEmpty(roleVO.RoleName), "role_name", roleVO.RoleName)
+	qw.Like(keqing.IsNotEmpty(roleVO.RoleName), "role_name", roleVO.RoleName)
 	qw.Eq(true, "deleted", constants.NO_DELETE_CODE)
 	qw.OrderByTimeAsc(true, "created_by")
 	page := mapper.BuilderPageUtils(roleVO.Current, roleVO.PageSize, qw)
@@ -74,7 +75,7 @@ func (that *SystemService) DeleteUserById(id int32, userId int32) utils.R {
 
 	qw := mapper.BuilderQueryWrapper(&models.User{})
 	qw.Eq(true, "id", id)
-	qw.Set(true, "last_modified_date", utils.GetNowDate())
+	qw.Set(true, "last_modified_date", keqing.NowDateStr())
 	qw.Set(true, "last_modified_by", userId)
 	qw.Set(true, "deleted", constants.DELETE_CODE)
 	count = mapper.Update(qw)
@@ -94,7 +95,7 @@ func (that *SystemService) ChangeUserStatus(userVO vo.UserVO) utils.R {
 	}
 	qw := mapper.BuilderQueryWrapper(&models.User{})
 	qw.Eq(true, "id", userVO.Id)
-	qw.Set(true, "last_modified_date", utils.GetNowDate())
+	qw.Set(true, "last_modified_date", keqing.NowDateStr())
 	qw.Set(true, "last_modified_by", userVO.LastModifiedBy)
 	qw.Set(true, "status", userVO.Status)
 	count = mapper.Update(qw)
@@ -123,9 +124,9 @@ func (that *SystemService) UserUpdate(userVO vo.UserVO) utils.R {
 
 	qw := mapper.BuilderQueryWrapper(&models.User{})
 	qw.Eq(true, "id", userVO.Id)
-	qw.Set(utils.IsNotEmpty(userVO.Password), "password", utils.GetMD5(userVO.Password, USER_SALT))
+	qw.Set(keqing.IsNotEmpty(userVO.Password), "password", keqing.MD5Salt(userVO.Password, USER_SALT))
 	qw.Set(true, "role", userVO.Role)
-	qw.Set(true, "last_modified_date", utils.GetNowDate())
+	qw.Set(true, "last_modified_date", keqing.NowDateStr())
 	qw.Set(true, "last_modified_by", userVO.LastModifiedBy)
 	count = mapper.Update(qw)
 	if count == 0 {
@@ -157,12 +158,12 @@ func (that *SystemService) UserInsert(userVO vo.UserVO) utils.R {
 	}
 	var user models.User
 	user.Username = userVO.Username
-	user.Password = utils.GetMD5(userVO.Password, USER_SALT)
+	user.Password = keqing.MD5Salt(userVO.Password, USER_SALT)
 	user.Role = userVO.Role
-	user.CreatedDate = utils.GetNowDate()
+	user.CreatedDate = keqing.NowDateStr()
 	user.CreatedBy = userVO.CreatedBy
 	user.LastModifiedBy = userVO.LastModifiedBy
-	user.LastModifiedDate = utils.GetNowDate()
+	user.LastModifiedDate = keqing.NowDateStr()
 	user.Deleted = constants.NO_DELETE_CODE
 	user.Status = constants.NORMAL_STATUS
 	count := mapper.InsertCustom(&user, true, false)
@@ -179,9 +180,9 @@ func (that *SystemService) UserInsert(userVO vo.UserVO) utils.R {
 func recoveryUser(userVO vo.UserVO) utils.R {
 	qw := mapper.BuilderQueryWrapper(&models.User{})
 	qw.Eq(true, "id", userVO.Id)
-	qw.Set(utils.IsNotEmpty(userVO.Password), "password", utils.GetMD5(userVO.Password, USER_SALT))
+	qw.Set(keqing.IsNotEmpty(userVO.Password), "password", keqing.MD5Salt(userVO.Password, USER_SALT))
 	qw.Set(true, "role", userVO.Role)
-	qw.Set(true, "last_modified_date", utils.GetNowDate())
+	qw.Set(true, "last_modified_date", keqing.NowDateStr())
 	qw.Set(true, "last_modified_by", userVO.LastModifiedBy)
 	qw.Set(true, "deleted", constants.NO_DELETE_CODE)
 	count := mapper.Update(qw)
@@ -222,8 +223,8 @@ func (that *SystemService) MenuInsert(menu models.SysMenu) utils.R {
 func (that *SystemService) MenuUpdate(menu models.SysMenu) utils.R {
 	qw := mapper.BuilderQueryWrapper(&models.SysMenu{})
 	qw.Eq(true, "id", menu.Id)
-	qw.Set(utils.IsNotEmpty(menu.MenuName), "menu_name", menu.MenuName)
-	qw.Set(utils.IsNotEmpty(menu.RouterName), "router_name", menu.RouterName)
+	qw.Set(keqing.IsNotEmpty(menu.MenuName), "menu_name", menu.MenuName)
+	qw.Set(keqing.IsNotEmpty(menu.RouterName), "router_name", menu.RouterName)
 	qw.Set(menu.MenuType > 0, "menu_type", menu.MenuType)
 	qw.Set(true, "order_num", menu.OrderNum)
 	qw.Set(true, "parent_id", menu.ParentId)
@@ -316,7 +317,7 @@ func (that *SystemService) RoleUpdate(roleVO vo.RolePageVO) utils.R {
 	qw := mapper.BuilderQueryWrapper(&models.SysRole{})
 	qw.Eq(true, "id", roleVO.Id)
 	qw.Set(true, "role_name", roleVO.RoleName)
-	qw.Set(true, "last_modified_date", utils.GetNowDate())
+	qw.Set(true, "last_modified_date", keqing.NowDateStr())
 	qw.Set(true, "last_modified_by", roleVO.UserId)
 	mapper.Update(qw)
 	return utils.Success("")
@@ -353,9 +354,9 @@ func (that *SystemService) RoleInsert(roleVO vo.RolePageVO) utils.R {
 	var role models.SysRole
 	role.RoleName = roleVO.RoleName
 	role.Deleted = constants.NO_DELETE_CODE
-	role.CreatedDate = utils.GetNowDate()
+	role.CreatedDate = keqing.NowDateStr()
 	role.CreatedBy = roleVO.UserId
-	role.LastModifiedDate = utils.GetNowDate()
+	role.LastModifiedDate = keqing.NowDateStr()
 	role.LastModifiedBy = roleVO.UserId
 
 	count := mapper.InsertCustom(&role, true, false)
@@ -372,7 +373,7 @@ func (that *SystemService) RoleInsert(roleVO vo.RolePageVO) utils.R {
 }
 
 func validateRole(role vo.RolePageVO) utils.R {
-	if utils.IsEmpty(role.RoleName) {
+	if keqing.IsEmpty(role.RoleName) {
 		return utils.Fail(constants.PARAMETER_ERROR, "Role name cannot be empty")
 	}
 	qw := mapper.BuilderQueryWrapper(&models.SysRole{})
@@ -443,7 +444,7 @@ func getParentMenu() []vo.MenuVO {
 }
 
 func validateUser(userVO vo.UserVO) utils.R {
-	if utils.IsEmpty(userVO.Username) {
+	if keqing.IsEmpty(userVO.Username) {
 		return utils.Fail(constants.PARAMETER_ERROR, "Username cannot be empty")
 	}
 	if userVO.Role <= 0 {
@@ -458,7 +459,7 @@ func validateUser(userVO vo.UserVO) utils.R {
 	}
 
 	if userVO.Id == 0 {
-		if utils.IsEmpty(userVO.Password) {
+		if keqing.IsEmpty(userVO.Password) {
 			return utils.Fail(constants.PARAMETER_ERROR, "Password cannot be empty")
 		}
 	}

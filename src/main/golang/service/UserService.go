@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/PurpleScorpion/go-sweet-json/jsonutil"
+	"github.com/PurpleScorpion/go-sweet-keqing/keqing"
 	"github.com/PurpleScorpion/go-sweet-orm/mapper"
 	"sweet-common/constants"
 	"sweet-common/utils"
@@ -18,20 +19,17 @@ var USER_SALT = "babalachongya"
 func (that *UserService) HealthCheck(id int32) utils.R {
 
 	expire := utils.GetCache(constants.GetUserExpireTimeKey(id))
-	if utils.IsEmpty(expire) {
+	if keqing.IsEmpty(expire) {
 		return utils.Fail(constants.TOKEN_ERROR, "user expired")
 	}
 
-	utcDate, err := utils.ParseUTC(expire)
-	if err != nil {
-		return utils.Fail(constants.TOKEN_ERROR, "user expired")
-	}
+	utcDate := keqing.ParseUTC(expire)
 	now := time.Now().UTC()
 	if now.After(utcDate) {
 		return utils.Fail(constants.TOKEN_ERROR, "user expired")
 	}
 
-	utils.SetCache(constants.GetHealthCheckKey(id), utils.GetNowUTCDate())
+	utils.SetCache(constants.GetHealthCheckKey(id), keqing.NowUTCDateStr())
 
 	return utils.Success("")
 }
@@ -47,12 +45,12 @@ func (that *UserService) RePassword(userVO vo.UserVO) utils.R {
 	password := userVO.Password
 	oldPassword := userVO.OldPassword
 
-	oldPasswordMd5 := utils.GetMD5(oldPassword, USER_SALT)
+	oldPasswordMd5 := keqing.MD5Salt(oldPassword, USER_SALT)
 	if oldPasswordMd5 != user.Password {
 		return utils.Fail(constants.USER_OLD_PASSWORD_ERROR, "Old password error")
 	}
 
-	passwordMd5 := utils.GetMD5(password, USER_SALT)
+	passwordMd5 := keqing.MD5Salt(password, USER_SALT)
 
 	var u models.User
 	uqw := mapper.BuilderQueryWrapper(&u)
@@ -70,7 +68,7 @@ func (that *UserService) Login(user models.User) utils.R {
 
 	var list []models.User
 	qw := mapper.BuilderQueryWrapper(&list)
-	qw.Eq(utils.IsNotEmpty(user.Username), "username", user.Username)
+	qw.Eq(keqing.IsNotEmpty(user.Username), "username", user.Username)
 	//qw.Eq(true, "status", constants.NORMAL_STATUS)
 	qw.Eq(true, "deleted", constants.NO_DELETE_CODE)
 
@@ -86,7 +84,7 @@ func (that *UserService) Login(user models.User) utils.R {
 	}
 
 	// 加盐加密
-	hashedPassword := utils.GetMD5(password, USER_SALT)
+	hashedPassword := keqing.MD5Salt(password, USER_SALT)
 
 	if hashedPassword != u.Password {
 		return utils.Fail(constants.USER_EMPTY_CODE, "Incorrect username or password")
@@ -105,14 +103,14 @@ func (that *UserService) Login(user models.User) utils.R {
 
 	// 计算明天的日期
 	tomorrow := now.AddDate(0, 0, 1)
-	tomorrowMorning := time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(), 4, 0, 0, 0, tomorrow.Location())
+	tomorrowMorning := time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(), 18, 0, 0, 0, tomorrow.Location())
 
-	localDate := utils.FormatLocalTime(tomorrowMorning)
-	utcDate, _ := utils.LocaltoUTC(localDate)
+	localDate := keqing.FormatDate(tomorrowMorning, keqing.DEFAULT_LOCAL_FORMAT)
+	utcDate := keqing.Local2UTC(localDate)
 	js.FluentPut("expirationTime", utcDate)
-	token, _ := utils.Encrypt(js.ToJsonString())
+	token := keqing.RsaEncrypt(js.ToJsonString())
 
-	utils.SetCache(constants.GetHealthCheckKey(u.Id), utils.GetNowUTCDate())
+	utils.SetCache(constants.GetHealthCheckKey(u.Id), keqing.NowUTCDateStr())
 	utils.SetCache(constants.GetUserExpireTimeKey(u.Id), utcDate)
 
 	var userVO vo.UserVO

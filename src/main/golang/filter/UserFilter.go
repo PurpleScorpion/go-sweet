@@ -52,13 +52,13 @@ var UserFilter = func(ctx *context.Context) {
 
 	token := values[0]
 
-	if utils.IsEmpty(token) {
+	if keqing.IsEmpty(token) {
 		ctx.Output.JSON(getErrorToken("Token does not exist"), false, false)
 		return
 	}
 
-	data, err := utils.Decrypt(token)
-	if err != nil {
+	data := keqing.RsaDecrypt(token)
+	if keqing.IsEmpty(data) {
 		ctx.Output.JSON(getErrorToken("Token error"), false, false)
 		return
 	}
@@ -174,14 +174,11 @@ func compareDate(utcStr string, data string) (bool, error) {
 	id := js.GetFloat64("id")
 
 	expire := utils.GetCache(constants.GetUserExpireTimeKey(int32(id)))
-	if utils.IsEmpty(expire) {
+	if keqing.IsEmpty(expire) {
 		return true, nil
 	}
 
-	utcDate, err := utils.ParseUTC(expire)
-	if err != nil {
-		return true, nil
-	}
+	utcDate := keqing.ParseUTC(expire)
 
 	if now.After(utcDate) {
 		return true, nil

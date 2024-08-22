@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/PurpleScorpion/go-sweet-json/jsonutil"
+	"github.com/PurpleScorpion/go-sweet-keqing/keqing"
 	beego "github.com/beego/beego/v2/server/web"
 	"github.com/beego/beego/v2/server/web/context"
 	"sweet-common/utils"
@@ -63,7 +64,7 @@ func getUserId(ctx *context.Context) int32 {
 	headers := ctx.Request.Header
 	values := headers["Token"]
 	token := values[0]
-	data, _ := utils.Decrypt(token)
+	data := keqing.RsaDecrypt(token)
 	js := jsonutil.NewJSONObject()
 	js.ParseObject(data)
 	id := js.GetFloat64("id")

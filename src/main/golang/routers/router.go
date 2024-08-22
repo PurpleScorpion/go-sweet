@@ -5,7 +5,7 @@ import (
 	"sweet-src/main/golang/controllers"
 )
 
-func InitRouters() {
+func Init() {
 	beego.Router("/login", &controllers.UserController{}, "post:Login")
 	beego.Router("/rePassword", &controllers.UserController{}, "post:RePassword")
 	beego.Router("/sys/user/healthCheck", &controllers.UserController{}, "get:HealthCheck")

@@ -6,7 +6,6 @@ import (
 	"os"
 	"sweet-common/constants"
 	"sweet-common/utils"
-	sweetyml "sweet-common/yaml"
 )
 
 type FileController struct {
@@ -18,7 +17,6 @@ func (that *FileController) GetBaseImg() {
 }
 
 func (that *FileController) UploadImg() {
-	conf := sweetyml.GetYmlConf()
 
 	files, _ := that.GetFiles("files")
 
@@ -34,7 +32,7 @@ func (that *FileController) UploadImg() {
 
 		fileName = utils.RandomImageName(fileHeader.Filename)
 
-		savePath := getPath(conf) + fileName
+		savePath := getPath() + fileName
 
 		src, err := fileHeader.Open()
 		if err != nil {
@@ -58,16 +56,16 @@ func (that *FileController) UploadImg() {
 	}
 
 	js := jsonutil.NewJSONObject()
-	js.FluentPut("baseURL", conf.Sweet.Img.MappingUrl+"/"+fileName)
-	js.FluentPut("url", conf.Sweet.Img.BaseUrl+conf.Sweet.Img.MappingUrl+"/"+fileName)
+	js.FluentPut("baseURL", constants.MAPPING_URL+"/"+fileName)
+	js.FluentPut("url", constants.IMG_BASE_URL+constants.MAPPING_URL+"/"+fileName)
 
 	that.Ok("Success", js.GetData())
 }
 
-func getPath(conf sweetyml.YmlConfig) string {
+func getPath() string {
 	// Create a folder if the folder does not exist
-	if err := os.MkdirAll(conf.Sweet.Img.Path+"/", os.ModePerm); err != nil {
+	if err := os.MkdirAll(constants.IMG_PATH+"/", os.ModePerm); err != nil {
 		panic(err)
 	}
-	return conf.Sweet.Img.Path + "/"
+	return constants.IMG_PATH + "/"
 }

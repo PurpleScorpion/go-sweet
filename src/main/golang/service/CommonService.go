@@ -4,16 +4,9 @@ import (
 	"fmt"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 	_ "github.com/go-sql-driver/mysql"
-	"sweet-common/utils"
 )
 
-// yml配置文件内容
-var (
-	imgBaseUrl string = ""
-)
-
-func ServiceInit() {
-	imgBaseUrl = utils.ValueString("${sweet.img.baseUrl}")
+func Init() {
 }
 
 func MqttOnlineTest(client MQTT.Client, msg MQTT.Message) {

@@ -3,7 +3,7 @@ package appMain
 import (
 	"github.com/beego/beego/v2/server/web"
 	"github.com/beego/beego/v2/server/web/filter/cors"
-	"sweet-common/utils"
+	"sweet-common/constants"
 	sweetyml "sweet-common/yaml"
 	"sweet-src/main/golang/filter"
 	"sweet-src/main/golang/routers"
@@ -28,22 +28,15 @@ func Main() {
 	// 注册中间件
 	web.InsertFilter("*", web.BeforeRouter, corsMiddleware)
 	// 权限拦截
-	web.InsertFilter("/*", web.BeforeRouter, filter.FilterUser)
+	web.InsertFilter("/*", web.BeforeRouter, filter.UserFilter)
 
 	web.Run()
 }
 
 func initMain() {
-	sweetyml.ReadYml()
-	conf := sweetyml.GetYmlConf()
-	web.BConfig.Listen.HTTPPort = conf.Server.Port
-	web.BConfig.AppName = conf.Server.Name
-	web.BConfig.CopyRequestBody = true
-	if conf.Sweet.Img.Active {
-		web.BConfig.WebConfig.StaticDir[conf.Sweet.Img.MappingUrl] = conf.Sweet.Img.Path
-	}
-	routers.InitRouters()
-	service.ServiceInit()
-	utils.InitUtils()
-	filter.InitFilter()
+	sweetyml.Init()
+	routers.Init()
+	service.Init()
+	constants.Init()
+	filter.Init()
 }

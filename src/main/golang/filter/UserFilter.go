@@ -3,6 +3,7 @@ package filter
 import (
 	"fmt"
 	"github.com/PurpleScorpion/go-sweet-json/jsonutil"
+	"github.com/PurpleScorpion/go-sweet-keqing/keqing"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/beego/beego/v2/server/web/context"
 	"net"
@@ -10,7 +11,6 @@ import (
 	"strings"
 	"sweet-common/constants"
 	"sweet-common/utils"
-	sweetyml "sweet-common/yaml"
 	"time"
 )
 
@@ -18,11 +18,10 @@ var fullExcludeUrls []string
 var prefixExcludeUrls []string
 var whitelist []string
 
-func InitFilter() {
-	conf := sweetyml.GetYmlConf()
-	fullExcludeUrls = conf.Sweet.ExcUrl.Full
-	prefixExcludeUrls = conf.Sweet.ExcUrl.Prefix
-	whitelist = utils.ValueStringArr("${sweet.whitelist}")
+func Init() {
+	fullExcludeUrls = keqing.ValueStringArr("${sweet.excludeUrl.full}")
+	prefixExcludeUrls = keqing.ValueStringArr("${sweet.excludeUrl.prefix}")
+	whitelist = keqing.ValueStringArr("${sweet.whitelist}")
 }
 
 func RecoverPanic(ctx *context.Context, cfg *web.Config) {
@@ -33,7 +32,7 @@ func RecoverPanic(ctx *context.Context, cfg *web.Config) {
 	}
 }
 
-var FilterUser = func(ctx *context.Context) {
+var UserFilter = func(ctx *context.Context) {
 	if excludeUrl(ctx.Input.URL()) {
 		return
 	}

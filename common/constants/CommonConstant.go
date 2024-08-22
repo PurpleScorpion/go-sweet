@@ -1,6 +1,9 @@
 package constants
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/PurpleScorpion/go-sweet-keqing/keqing"
+)
 
 var (
 	NO_DELETE_CODE int32 = 0 // 未删除
@@ -18,6 +21,23 @@ var (
 	HEALTH_CHECK_KEY     string = "HEALTH_CHECK_"
 	USER_EXPIRE_TIME_KEY string = "USER_EXPIRE_TIME_"
 )
+
+var (
+	IMG_BASE_URL string = ""
+	IMG_PATH     string = ""
+	MAPPING_URL  string = ""
+)
+
+func Init() {
+	IMG_BASE_URL = keqing.ValueString("${sweet.img.baseUrl}")
+	if keqing.IsEmpty(IMG_BASE_URL) {
+		IMG_BASE_URL = fmt.Sprintf("http://localhost:%d", keqing.ValueInt("${server.port}"))
+	}
+
+	IMG_PATH = keqing.ValueString("${sweet.img.path}")
+	MAPPING_URL = keqing.ValueString("${sweet.img.mappingUrl}")
+
+}
 
 func GetHealthCheckKey(id int32) string {
 	return fmt.Sprintf("%s%d", HEALTH_CHECK_KEY, id)

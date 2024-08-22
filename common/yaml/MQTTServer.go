@@ -3,6 +3,7 @@ package sweetyml
 import (
 	"crypto/tls"
 	"fmt"
+	"github.com/PurpleScorpion/go-sweet-keqing/keqing"
 	"github.com/beego/beego/v2/core/logs"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 	"math/rand"
@@ -31,15 +32,33 @@ var (
 )
 
 func initMqtt() {
-	conf := GetYmlConf()
-	if !conf.Sweet.Mqtt.Active {
+	mqttServer := keqing.ValueString("${sweet.mqtt.host}")
+	if keqing.IsEmpty(mqttServer) {
 		return
 	}
 	logs.Info("Init MQTT....")
-	mqttServer := conf.Sweet.Mqtt.Host
-	mqttPort := conf.Sweet.Mqtt.Port
-	mqttUsername := conf.Sweet.Mqtt.User     // cooldesign
-	mqttPassword := conf.Sweet.Mqtt.Password // Q0^@RG4DqzvK3#vd
+	mqttPort := keqing.ValueInt("${sweet.mqtt.port}")
+	if mqttPort == 0 {
+		mqttPort = 1883
+	}
+	if mqttPort <= 0 || mqttPort > 65535 {
+		panic("mqtt port error")
+	}
+	mqttUsername := keqing.ValueString("${sweet.mqtt.user}")
+	if keqing.IsEmpty(mqttUsername) {
+		panic("mqtt username error")
+	}
+	pwd := keqing.ValueObject("${sweet.mqtt.password}")
+	mqttPassword := ""
+	switch pwd.(type) {
+	case int:
+		mqttPassword = fmt.Sprintf("%d", pwd.(int))
+	case string:
+		mqttPassword = pwd.(string)
+	}
+	if keqing.IsEmpty(mqttPassword) {
+		panic("mqtt password error")
+	}
 
 	str := fmt.Sprintf("mqtt://%s:%d", mqttServer, mqttPort)
 	options := MQTT.NewClientOptions().AddBroker(str) // Replace with your MQTT broker details
@@ -73,8 +92,8 @@ func initMqtt() {
 }
 
 func MqttOnline() {
-	conf := GetYmlConf()
-	if !conf.Sweet.Mqtt.Active {
+	mqttServer := keqing.ValueString("${sweet.mqtt.host}")
+	if keqing.IsEmpty(mqttServer) {
 		return
 	}
 	// 保证日志模块加载完毕

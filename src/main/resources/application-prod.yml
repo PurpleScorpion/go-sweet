@@ -4,7 +4,6 @@ server:
 
 sweet:
   mysql:
-    active: true #是否激活使用mysql配置 必填
     host: 192.168.253.130
     port: 3306
     user: root
@@ -14,11 +13,22 @@ sweet:
     maxOpenConns: 100 # 最大打开连接数
 
   redis:
-    active: true #是否激活使用redis配置
     host: 192.168.253.130
     port: 6379
     password: 123456 # 若没有密码，则不用填该项
     database: 2
+
+  adx:
+    host: https://your.adx.com
+    appId: your_app_id
+    appKey: your_app_key
+    authorityID: your_authority_id
+
+  mqtt:
+    host: 192.168.1.17
+    port: 1883
+    user: admin
+    password: 123456
 
   logging:
     level: info

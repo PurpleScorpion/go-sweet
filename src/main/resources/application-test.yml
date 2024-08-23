@@ -24,6 +24,9 @@ sweet:
     maxSize: 10 # 单个日志文件最大大小，单位：MB
     maxDays: 30 # 单个日志文件保存天数
     maxBackups: 10 # 最大备份日志文件数量
+    adapters: # 日志输出适配器
+      - file # 输出到文件
+      - console # 输出到控制台
 
   img:
     mappingUrl: /static # 映射的url 参考Tomcat映射图片地址配置

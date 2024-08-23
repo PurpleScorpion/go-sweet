@@ -2,6 +2,7 @@ package sweetyml
 
 import (
 	"fmt"
+	cache "github.com/PurpleScorpion/go-sweet-cache"
 	"github.com/PurpleScorpion/go-sweet-keqing/keqing"
 	"github.com/beego/beego/v2/core/logs"
 	"gopkg.in/yaml.v3"
@@ -47,6 +48,9 @@ func Init() {
 	if port <= 0 || port > 65535 {
 		panic("Invalid port number: " + fmt.Sprintf("%d", port))
 	}
+	cache.New(cache.NoExpiration, cache.NoExpiration)
+	cache.SweetCache.Set("ymlConf", conf1, cache.NoExpiration)
+	cache.SweetCache.Set("ymlConf2", conf2, cache.NoExpiration)
 
 	logs.Info("The following profiles are active: %s", serverActive)
 	logs.Info("Golang server initialized with port(s): %d (http)", port)

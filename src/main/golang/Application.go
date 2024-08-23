@@ -5,7 +5,6 @@ import (
 	"github.com/beego/beego/v2/server/web/filter/cors"
 	"sweet-common/constants"
 	"sweet-common/utils"
-	sweetyml "sweet-common/yaml"
 	"sweet-src/main/golang/filter"
 	"sweet-src/main/golang/routers"
 	"sweet-src/main/golang/service"
@@ -35,7 +34,6 @@ func Main() {
 }
 
 func initMain() {
-	sweetyml.Init()
 	routers.Init()
 	service.Init()
 	constants.Init()

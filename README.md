@@ -65,6 +65,7 @@ go version 1.20
 使用方式 logger.Info("日志内容")
 进阶使用方式: logger.Info("日志内容: %d, %s", 123, "参数2")
 keqing工具类使用方式: logger.Info("日志内容: %s", keqing.ToString(obj))
+
 ```
 - yaml 配置文件处理包
 ```text
@@ -168,6 +169,9 @@ sweet:
     maxDays: 30 # 单个日志文件保存天数
     # 选填: 默认值10
     maxBackups: 10 # 最大备份日志文件数量
+    adapters: # 日志输出适配器 , 若仅输出到控制台 , 则无需配置其他配置 , 具体可参考dev配置文件
+      - file # 输出到文件
+      - console # 输出到控制台
 
   # 图片配置
   img:

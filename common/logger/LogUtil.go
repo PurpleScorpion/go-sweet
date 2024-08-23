@@ -9,7 +9,7 @@ import (
 
 var log *logs.BeeLogger
 
-func LoggerInit() {
+func Init() {
 	// 创建一个日志器，可以给它指定一个名称，便于区分多个日志器
 	log = logs.NewLogger()
 	// 设置日志级别，例如：debug、info、warn、error、critical，默认为debug

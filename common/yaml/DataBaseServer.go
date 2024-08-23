@@ -96,7 +96,6 @@ func initAdx() {
 			panic("adx authorityID is empty")
 		}
 	}
-	fmt.Println(appId, appKey, authorityID)
 	if authMethod == "SMI" {
 		kcsb = kusto.NewConnectionStringBuilder(host).WithSystemManagedIdentity()
 	} else {

@@ -58,7 +58,7 @@ func Init() {
 }
 
 func initServer() {
-	logger.LoggerInit()
+	logger.Init()
 	initMySQL()
 	initRedis()
 	initAdx()

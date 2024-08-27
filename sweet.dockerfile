@@ -1,7 +1,5 @@
 FROM golang:alpine3.18 AS builder
 
-ENV GOPROXY=https://goproxy.cn,direct
-
 RUN apk add --no-cache git gcc g++ musl-dev
 
 WORKDIR /app

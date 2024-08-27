@@ -20,6 +20,19 @@ go version 1.20
 请仔细阅读配置文件说明
 ```
 
+# 项目上线注意
+```text
+项目上线建议使用Docker进行部署
+项目中已经写好Dockerfile文件 , 可以直接使用Docker进行部署
+application.yml中的server.active主要用于本地环境的使用
+线上请使用环境变量 PROFILES_ACTIVE 来控制
+注意: PROFILES_ACTIVE也是唯一区分线上环境与本地环境的区别
+当PROFILES_ACTIVE为空时(也就是没设置), 则系统默认当前环境为本地环境(当前本地环境也可以激活test/prod等,但是只能在本地运行)
+当PROFILES_ACTIVE不为空时,则为线上环境
+规则请参考Java的SpringBoot部署规则
+习惯优于配置,配置优于编码
+```
+
 ## 目录结构
 ```text
     - common # 公共模块 - 分包go.mod
@@ -120,7 +133,8 @@ sweet:
     maxIdleConns: 50 # 最大空闲连接数        
     # 选填: 默认值100        
     maxOpenConns: 100 # 最大打开连接数               
-
+    logActive: true # 是否打印sql语句 , 若为false ,则可默认不写
+    
   redis:
     # 必填               
     host: 192.168.253.130 # redis地址

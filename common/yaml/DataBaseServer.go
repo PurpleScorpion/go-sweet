@@ -65,7 +65,7 @@ func initMySQL() {
 	orm.SetMaxIdleConns("default", maxIdleConns)
 	orm.SetMaxOpenConns("default", maxOpenConns)
 	orm.Debug = false
-	mapper.InitMapper(mapper.MySQL, true)
+	mapper.InitMapper(mapper.MySQL, keqing.ValueBool("${sweet.mysql.logActive}"))
 }
 
 func initAdx() {

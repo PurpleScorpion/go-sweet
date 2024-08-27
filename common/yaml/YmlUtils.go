@@ -39,7 +39,7 @@ func Init() {
 	yaml.Unmarshal(data, &conf1)
 	conf2 := readChildConf(conf1)
 	keqing.LoadYml(conf1, conf2)
-	serverActive := keqing.ValueString("${server.active}")
+	serverActive := getEnvActive(conf1)
 	if keqing.IsEmpty(serverActive) {
 		panic("No active profiles found. Please specify a profile using the 'server.active' property.")
 	}

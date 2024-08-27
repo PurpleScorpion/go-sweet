@@ -11,6 +11,7 @@ sweet:
     dbName: sweet_test
     maxIdleConns: 50 # 最大空闲连接数
     maxOpenConns: 100 # 最大打开连接数
+    logActive: true # 是否打印sql语句 , 若为false ,则可默认不写
 
   redis:
     host: 192.168.251.3

@@ -31,6 +31,20 @@ func (that *UserService) HealthCheck(id int32) utils.R {
 
 	utils.SetCache(constants.GetHealthCheckKey(id), keqing.NowUTCDateStr())
 
+	subMinutes := utcDate.Sub(now).Minutes()
+
+	if subMinutes <= 30 && subMinutes > 0 {
+		js := jsonutil.NewJSONObject()
+		js.FluentPut("id", id)
+		// 计算过期时间
+		expireTime := keqing.NowDate().Add(4 * time.Hour)
+		newUtcDate := keqing.FormatDate(expireTime.UTC(), keqing.DEFAULT_UTC_FORMAT)
+		js.FluentPut("expirationTime", newUtcDate)
+		token := keqing.RsaEncrypt(js.ToJsonString())
+		utils.SetCache(constants.GetUserExpireTimeKey(id), newUtcDate)
+		return utils.Success(token)
+	}
+
 	return utils.Success("")
 }
 
@@ -98,15 +112,9 @@ func (that *UserService) Login(user models.User) utils.R {
 	js := jsonutil.NewJSONObject()
 	js.FluentPut("id", u.Id)
 
-	// 获取当前时间
-	now := time.Now()
-
-	// 计算明天的日期
-	tomorrow := now.AddDate(0, 0, 1)
-	tomorrowMorning := time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(), 18, 0, 0, 0, tomorrow.Location())
-
-	localDate := keqing.FormatDate(tomorrowMorning, keqing.DEFAULT_LOCAL_FORMAT)
-	utcDate := keqing.Local2UTC(localDate)
+	// 计算过期时间
+	expireTime := keqing.NowDate().Add(4 * time.Hour)
+	utcDate := keqing.FormatDate(expireTime.UTC(), keqing.DEFAULT_UTC_FORMAT)
 	js.FluentPut("expirationTime", utcDate)
 	token := keqing.RsaEncrypt(js.ToJsonString())
 

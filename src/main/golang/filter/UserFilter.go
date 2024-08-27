@@ -7,7 +7,6 @@ import (
 	"github.com/beego/beego/v2/server/web"
 	"github.com/beego/beego/v2/server/web/context"
 	"net"
-	"net/http"
 	"strings"
 	"sweet-common/constants"
 	"sweet-common/utils"
@@ -27,7 +26,6 @@ func Init() {
 func RecoverPanic(ctx *context.Context, cfg *web.Config) {
 	if err := recover(); err != nil {
 		// 在这里处理 panic
-		ctx.Output.SetStatus(http.StatusInternalServerError)
 		ctx.Output.JSON(getErrorToken(fmt.Sprintf("%v", err)), false, false)
 	}
 }

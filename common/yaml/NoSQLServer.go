@@ -28,11 +28,13 @@ func initRedis() {
 	addr := fmt.Sprintf("%s:%d", host, port)
 	pwd := keqing.ValueObject("${sweet.redis.password}")
 	password := ""
-	switch pwd.(type) {
-	case int:
-		password = fmt.Sprintf("%d", pwd.(int))
-	case string:
-		password = pwd.(string)
+	if pwd != nil {
+		switch pwd.(type) {
+		case int:
+			password = fmt.Sprintf("%d", pwd.(int))
+		case string:
+			password = pwd.(string)
+		}
 	}
 
 	database := keqing.ValueInt("${sweet.redis.database}")

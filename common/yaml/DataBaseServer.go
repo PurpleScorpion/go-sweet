@@ -25,14 +25,7 @@ func initMySQL() {
 	if keqing.IsEmpty(username) {
 		panic("mysql username is empty")
 	}
-	pwd := keqing.ValueObject("${sweet.mysql.password}")
-	password := ""
-	switch pwd.(type) {
-	case int:
-		password = fmt.Sprintf("%d", pwd.(int))
-	case string:
-		password = pwd.(string)
-	}
+	password := keqing.ValueString("${sweet.mysql.password}")
 
 	if keqing.IsEmpty(password) {
 		panic("mysql password is empty")

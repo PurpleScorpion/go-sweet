@@ -48,14 +48,7 @@ func initMqtt() {
 	if keqing.IsEmpty(mqttUsername) {
 		panic("mqtt username error")
 	}
-	pwd := keqing.ValueObject("${sweet.mqtt.password}")
-	mqttPassword := ""
-	switch pwd.(type) {
-	case int:
-		mqttPassword = fmt.Sprintf("%d", pwd.(int))
-	case string:
-		mqttPassword = pwd.(string)
-	}
+	mqttPassword := keqing.ValueString("${sweet.mqtt.password}")
 	if keqing.IsEmpty(mqttPassword) {
 		panic("mqtt password error")
 	}

@@ -26,17 +26,7 @@ func initRedis() {
 	}
 
 	addr := fmt.Sprintf("%s:%d", host, port)
-	pwd := keqing.ValueObject("${sweet.redis.password}")
-	password := ""
-	if pwd != nil {
-		switch pwd.(type) {
-		case int:
-			password = fmt.Sprintf("%d", pwd.(int))
-		case string:
-			password = pwd.(string)
-		}
-	}
-
+	password := keqing.ValueString("${sweet.redis.password}")
 	database := keqing.ValueInt("${sweet.redis.database}")
 	if database < 0 || database > 15 {
 		panic("Redis database is invalid")

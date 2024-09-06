@@ -2,7 +2,7 @@ package service
 
 import (
 	"github.com/PurpleScorpion/go-sweet-keqing/keqing"
-	"github.com/PurpleScorpion/go-sweet-orm/mapper"
+	"github.com/PurpleScorpion/go-sweet-orm/v2/mapper"
 	"sweet-common/constants"
 	"sweet-common/utils"
 	"sweet-common/vo"
@@ -68,17 +68,17 @@ func (that *SystemService) DeleteUserById(id int32, userId int32) utils.R {
 	sqw := mapper.BuilderQueryWrapper(&models.User{})
 	sqw.Eq(true, "id", id)
 	sqw.Eq(true, "deleted", constants.NO_DELETE_CODE)
-	count := mapper.SelectCount(sqw)
+	count := sqw.SelectCount()
 	if count == 0 {
 		return utils.Fail(constants.DATA_NOT_EXIST, "The user does not exist")
 	}
 
-	qw := mapper.BuilderQueryWrapper(&models.User{})
+	qw := mapper.BuilderUpdateWrapper(&models.User{})
 	qw.Eq(true, "id", id)
 	qw.Set(true, "last_modified_date", keqing.NowDateStr())
 	qw.Set(true, "last_modified_by", userId)
 	qw.Set(true, "deleted", constants.DELETE_CODE)
-	count = mapper.Update(qw)
+	count = qw.Update()
 	if count == 0 {
 		return utils.Fail(constants.UPDATE_ERROR, "Update failed")
 	}
@@ -89,16 +89,16 @@ func (that *SystemService) ChangeUserStatus(userVO vo.UserVO) utils.R {
 	sqw := mapper.BuilderQueryWrapper(&models.User{})
 	sqw.Eq(true, "id", userVO.Id)
 	sqw.Eq(true, "deleted", constants.NO_DELETE_CODE)
-	count := mapper.SelectCount(sqw)
+	count := sqw.SelectCount()
 	if count == 0 {
 		return utils.Fail(constants.DATA_NOT_EXIST, "The user does not exist")
 	}
-	qw := mapper.BuilderQueryWrapper(&models.User{})
+	qw := mapper.BuilderUpdateWrapper(&models.User{})
 	qw.Eq(true, "id", userVO.Id)
 	qw.Set(true, "last_modified_date", keqing.NowDateStr())
 	qw.Set(true, "last_modified_by", userVO.LastModifiedBy)
 	qw.Set(true, "status", userVO.Status)
-	count = mapper.Update(qw)
+	count = qw.Update()
 	if count == 0 {
 		return utils.Fail(constants.UPDATE_ERROR, "Update failed")
 	}
@@ -117,18 +117,18 @@ func (that *SystemService) UserUpdate(userVO vo.UserVO) utils.R {
 	sqw := mapper.BuilderQueryWrapper(&models.User{})
 	sqw.Eq(true, "id", userVO.Id)
 	sqw.Eq(true, "deleted", constants.NO_DELETE_CODE)
-	count := mapper.SelectCount(sqw)
+	count := sqw.SelectCount()
 	if count == 0 {
 		return utils.Fail(constants.DATA_NOT_EXIST, "The user does not exist")
 	}
 
-	qw := mapper.BuilderQueryWrapper(&models.User{})
+	qw := mapper.BuilderUpdateWrapper(&models.User{})
 	qw.Eq(true, "id", userVO.Id)
 	qw.Set(keqing.IsNotEmpty(userVO.Password), "password", keqing.MD5Salt(userVO.Password, USER_SALT))
 	qw.Set(true, "role", userVO.Role)
 	qw.Set(true, "last_modified_date", keqing.NowDateStr())
 	qw.Set(true, "last_modified_by", userVO.LastModifiedBy)
-	count = mapper.Update(qw)
+	count = qw.Update()
 	if count == 0 {
 		return utils.Fail(constants.UPDATE_ERROR, "Update failed")
 	}
@@ -146,7 +146,7 @@ func (that *SystemService) UserInsert(userVO vo.UserVO) utils.R {
 	// 判断用户名是否重复
 	qw := mapper.BuilderQueryWrapper(&users)
 	qw.Eq(true, "username", userVO.Username)
-	mapper.SelectList(qw)
+	qw.SelectList()
 	if len(users) > 0 {
 		// 判断账号状态
 		if users[0].Deleted == constants.NO_DELETE_CODE {
@@ -166,7 +166,7 @@ func (that *SystemService) UserInsert(userVO vo.UserVO) utils.R {
 	user.LastModifiedDate = keqing.NowDateStr()
 	user.Deleted = constants.NO_DELETE_CODE
 	user.Status = constants.NORMAL_STATUS
-	count := mapper.InsertCustom(&user, true, false)
+	count := mapper.InsertCustom(&user, false)
 	if count == 0 {
 		return utils.Fail(constants.INSERT_ERROR, "Insert failed")
 	}
@@ -178,14 +178,14 @@ func (that *SystemService) UserInsert(userVO vo.UserVO) utils.R {
 恢复账号删除状态
 */
 func recoveryUser(userVO vo.UserVO) utils.R {
-	qw := mapper.BuilderQueryWrapper(&models.User{})
+	qw := mapper.BuilderUpdateWrapper(&models.User{})
 	qw.Eq(true, "id", userVO.Id)
 	qw.Set(keqing.IsNotEmpty(userVO.Password), "password", keqing.MD5Salt(userVO.Password, USER_SALT))
 	qw.Set(true, "role", userVO.Role)
 	qw.Set(true, "last_modified_date", keqing.NowDateStr())
 	qw.Set(true, "last_modified_by", userVO.LastModifiedBy)
 	qw.Set(true, "deleted", constants.NO_DELETE_CODE)
-	count := mapper.Update(qw)
+	count := qw.Update()
 	if count == 0 {
 		return utils.Fail(constants.UPDATE_ERROR, "Update failed")
 	}
@@ -213,7 +213,7 @@ func (that *SystemService) GetUserById(id int32) utils.R {
 
 func (that *SystemService) MenuInsert(menu models.SysMenu) utils.R {
 	menu.IsSys = 0
-	count := mapper.InsertCustom(&menu, true, false)
+	count := mapper.InsertCustom(&menu, false)
 	if count == 0 {
 		return utils.Fail(constants.INSERT_ERROR, "Insert failed")
 	}
@@ -221,14 +221,14 @@ func (that *SystemService) MenuInsert(menu models.SysMenu) utils.R {
 }
 
 func (that *SystemService) MenuUpdate(menu models.SysMenu) utils.R {
-	qw := mapper.BuilderQueryWrapper(&models.SysMenu{})
+	qw := mapper.BuilderUpdateWrapper(&models.SysMenu{})
 	qw.Eq(true, "id", menu.Id)
 	qw.Set(keqing.IsNotEmpty(menu.MenuName), "menu_name", menu.MenuName)
 	qw.Set(keqing.IsNotEmpty(menu.RouterName), "router_name", menu.RouterName)
 	qw.Set(menu.MenuType > 0, "menu_type", menu.MenuType)
 	qw.Set(true, "order_num", menu.OrderNum)
 	qw.Set(true, "parent_id", menu.ParentId)
-	count := mapper.Update(qw)
+	count := qw.Update()
 	if count == 0 {
 		return utils.Fail(constants.UPDATE_ERROR, "Update failed")
 	}
@@ -244,7 +244,7 @@ func (that *SystemService) AllRole() utils.R {
 	var roles []models.SysRole
 	qw := mapper.BuilderQueryWrapper(&roles)
 	qw.Eq(true, "deleted", constants.NO_DELETE_CODE)
-	mapper.SelectList(qw)
+	qw.SelectList()
 	return utils.Success(roles)
 }
 
@@ -267,7 +267,7 @@ func (that *SystemService) DeleteMenuById(id int32) utils.R {
 
 	qw := mapper.BuilderQueryWrapper(&models.SysMenu{})
 	qw.Eq(true, "parent_id", id)
-	count := mapper.SelectCount(qw)
+	count := qw.SelectCount()
 	if count > 0 {
 		return utils.Fail(constants.DELETE_ERROR, "There are submenus in the current directory that have not been deleted")
 	}
@@ -281,7 +281,7 @@ func (that *SystemService) DeleteMenuById(id int32) utils.R {
 func (that *SystemService) DeleteRoleById(id int32) utils.R {
 	qw := mapper.BuilderQueryWrapper(&models.SysRole{})
 	qw.Eq(true, "id", id)
-	count := mapper.SelectCount(qw)
+	count := qw.SelectCount()
 	if count == 0 {
 		return utils.Fail(constants.DATA_NOT_EXIST, "Menu does not exist")
 	}
@@ -290,9 +290,9 @@ func (that *SystemService) DeleteRoleById(id int32) utils.R {
 		return utils.Fail(constants.DELETE_ERROR, "Delete failed. Please try again later")
 	}
 	// 删除权限
-	delQw := mapper.BuilderQueryWrapper(&models.SysRoleMenu{})
+	delQw := mapper.BuilderUpdateWrapper(&models.SysRoleMenu{})
 	delQw.Eq(true, "role_id", id)
-	mapper.Delete(delQw)
+	delQw.Delete()
 	return utils.Success("")
 }
 
@@ -303,23 +303,23 @@ func (that *SystemService) RoleUpdate(roleVO vo.RolePageVO) utils.R {
 	}
 
 	// 先删除旧权限
-	delQw := mapper.BuilderQueryWrapper(&models.SysRoleMenu{})
+	delQw := mapper.BuilderUpdateWrapper(&models.SysRoleMenu{})
 	delQw.Eq(true, "role_id", roleVO.Id)
-	mapper.Delete(delQw)
+	delQw.Delete()
 	// 在添加新权限
 	for _, menuIds := range roleVO.MenuIds {
 		var roleMenu models.SysRoleMenu
 		roleMenu.RoleId = roleVO.Id
 		roleMenu.MenuId = menuIds
-		mapper.Insert(&roleMenu)
+		mapper.InsertCustom(&roleMenu, false)
 	}
 	// 更新角色信息
-	qw := mapper.BuilderQueryWrapper(&models.SysRole{})
+	qw := mapper.BuilderUpdateWrapper(&models.SysRole{})
 	qw.Eq(true, "id", roleVO.Id)
 	qw.Set(true, "role_name", roleVO.RoleName)
 	qw.Set(true, "last_modified_date", keqing.NowDateStr())
 	qw.Set(true, "last_modified_by", roleVO.UserId)
-	mapper.Update(qw)
+	qw.Update()
 	return utils.Success("")
 }
 
@@ -332,7 +332,7 @@ func (that *SystemService) GetRoleById(id int32) utils.R {
 	var roleMenuList []models.SysRoleMenu
 	qw := mapper.BuilderQueryWrapper(&roleMenuList)
 	qw.Eq(true, "role_id", id)
-	mapper.SelectList(qw)
+	qw.SelectList()
 	var rolePage vo.RolePageVO
 
 	rolePage.Id = roles[0].Id
@@ -359,7 +359,7 @@ func (that *SystemService) RoleInsert(roleVO vo.RolePageVO) utils.R {
 	role.LastModifiedDate = keqing.NowDateStr()
 	role.LastModifiedBy = roleVO.UserId
 
-	count := mapper.InsertCustom(&role, true, false)
+	count := mapper.InsertCustom(&role, false)
 	if count == 0 {
 		return utils.Fail(constants.INSERT_ERROR, "Insert failed")
 	}
@@ -367,7 +367,7 @@ func (that *SystemService) RoleInsert(roleVO vo.RolePageVO) utils.R {
 		var roleMenu models.SysRoleMenu
 		roleMenu.RoleId = role.Id
 		roleMenu.MenuId = menuIds
-		mapper.Insert(&roleMenu)
+		mapper.InsertCustom(&roleMenu, false)
 	}
 	return utils.Success("")
 }
@@ -380,7 +380,7 @@ func validateRole(role vo.RolePageVO) utils.R {
 	qw.Eq(true, "role_name", role.RoleName)
 	qw.Ne(role.Id > 0, "id", role.Id)
 	qw.Eq(true, "deleted", constants.NO_DELETE_CODE)
-	count := mapper.SelectCount(qw)
+	count := qw.SelectCount()
 
 	if count > 0 {
 		return utils.Fail(constants.PARAMETER_ERROR, "Role name already exists")
@@ -399,7 +399,7 @@ func getChildMenu(pvos []vo.MenuVO) {
 		qw := mapper.BuilderQueryWrapper(&list)
 		qw.Eq(true, "parent_id", pid)
 		qw.OrderByAsc(true, "order_num")
-		mapper.SelectList(qw)
+		qw.SelectList()
 		if len(list) == 0 {
 			continue
 		}
@@ -425,7 +425,7 @@ func getParentMenu() []vo.MenuVO {
 	qw := mapper.BuilderQueryWrapper(&list)
 	qw.Eq(true, "parent_id", 0)
 	qw.OrderByAsc(true, "order_num")
-	mapper.SelectList(qw)
+	qw.SelectList()
 	if len(list) == 0 {
 		return vos
 	}
@@ -453,7 +453,7 @@ func validateUser(userVO vo.UserVO) utils.R {
 	qw := mapper.BuilderQueryWrapper(&models.SysRole{})
 	qw.Eq(true, "id", userVO.Role)
 	qw.Eq(true, "deleted", constants.NO_DELETE_CODE)
-	count := mapper.SelectCount(qw)
+	count := qw.SelectCount()
 	if count == 0 {
 		return utils.Fail(constants.PARAMETER_ERROR, "Role does not exist")
 	}

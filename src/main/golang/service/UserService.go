@@ -3,7 +3,7 @@ package service
 import (
 	"github.com/PurpleScorpion/go-sweet-json/jsonutil"
 	"github.com/PurpleScorpion/go-sweet-keqing/keqing"
-	"github.com/PurpleScorpion/go-sweet-orm/mapper"
+	"github.com/PurpleScorpion/go-sweet-orm/v2/mapper"
 	"sweet-common/constants"
 	"sweet-common/utils"
 	"sweet-common/vo"
@@ -67,10 +67,10 @@ func (that *UserService) RePassword(userVO vo.UserVO) utils.R {
 	passwordMd5 := keqing.MD5Salt(password, USER_SALT)
 
 	var u models.User
-	uqw := mapper.BuilderQueryWrapper(&u)
+	uqw := mapper.BuilderUpdateWrapper(&u)
 	uqw.Eq(true, "id", user.Id)
 	uqw.Set(true, "password", passwordMd5)
-	count := mapper.Update(uqw)
+	count := uqw.Update()
 	if count == 0 {
 		return utils.Fail(constants.UPDATE_ERROR, "Password update failed, please try again later")
 	}
@@ -86,7 +86,7 @@ func (that *UserService) Login(user models.User) utils.R {
 	//qw.Eq(true, "status", constants.NORMAL_STATUS)
 	qw.Eq(true, "deleted", constants.NO_DELETE_CODE)
 
-	mapper.SelectList(qw)
+	qw.SelectList()
 
 	if len(list) == 0 {
 		return utils.Fail(constants.USER_EMPTY_CODE, "Incorrect username or password")
@@ -136,7 +136,7 @@ func getRoleList(u models.User) []string {
 	qw := mapper.BuilderQueryWrapper(&menuList)
 	// 如果是超管 , 则直接返回所有的路由
 	if u.Role == constants.ROOT_ROLE_ID {
-		mapper.SelectList(qw)
+		qw.SelectList()
 		for i := 0; i < len(menuList); i++ {
 			routers = append(routers, menuList[i].RouterName)
 		}
@@ -151,7 +151,7 @@ func getRoleList(u models.User) []string {
 	var roleMenuList []models.SysRoleMenu
 	rmQw := mapper.BuilderQueryWrapper(&roleMenuList)
 	rmQw.Eq(true, "role_id", u.Role)
-	mapper.SelectList(rmQw)
+	rmQw.SelectList()
 	// 角色没有配置菜单
 	if len(roleMenuList) == 0 {
 		return routers
@@ -161,7 +161,7 @@ func getRoleList(u models.User) []string {
 		ids = append(ids, roleMenuList[i].MenuId)
 	}
 	qw.InInt32(true, "id", ids)
-	mapper.SelectList(qw)
+	qw.SelectList()
 	if len(menuList) == 0 {
 		return routers
 	}

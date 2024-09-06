@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"github.com/Azure/azure-kusto-go/kusto"
 	"github.com/PurpleScorpion/go-sweet-keqing/keqing"
-	"github.com/PurpleScorpion/go-sweet-orm/mapper"
-	"github.com/beego/beego/orm"
+	"github.com/PurpleScorpion/go-sweet-orm/v2/mapper"
 	"github.com/beego/beego/v2/core/logs"
 	_ "github.com/go-sql-driver/mysql"
 	"sweet-common/utils"
@@ -53,12 +52,10 @@ func initMySQL() {
 	}
 
 	connStr := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=true&loc=Local", username, password, host, port, dbName)
-	orm.RegisterDriver("mysql", orm.DRMySQL)
-	orm.RegisterDataBase("default", "mysql", connStr)
-	orm.SetMaxIdleConns("default", maxIdleConns)
-	orm.SetMaxOpenConns("default", maxOpenConns)
-	orm.Debug = false
-	mapper.InitMapper(mapper.MySQL, keqing.ValueBool("${sweet.mysql.logActive}"))
+	mapper.Register(mapper.MySQL, connStr, maxIdleConns, maxOpenConns)
+	if keqing.ValueBool("${sweet.mysql.logActive}") {
+		mapper.OpenLog()
+	}
 }
 
 func initAdx() {

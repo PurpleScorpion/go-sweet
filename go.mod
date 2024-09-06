@@ -4,7 +4,6 @@ go 1.20
 
 require (
 	github.com/PurpleScorpion/go-sweet-json v1.0.3
-	github.com/PurpleScorpion/go-sweet-orm v1.0.17
 	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.8.1
@@ -28,6 +27,7 @@ require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/PurpleScorpion/go-sweet-cache v0.0.1 // indirect
 	github.com/PurpleScorpion/go-sweet-keqing v0.0.7 // indirect
+	github.com/PurpleScorpion/go-sweet-orm/v2 v2.0.6 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
@@ -48,9 +48,9 @@ require (
 	github.com/prometheus/common v0.48.0 // indirect
 	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
-	golang.org/x/crypto v0.22.0 // indirect
-	golang.org/x/net v0.21.0 // indirect
-	golang.org/x/sys v0.19.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/crypto v0.23.0 // indirect
+	golang.org/x/net v0.25.0 // indirect
+	golang.org/x/sys v0.20.0 // indirect
+	golang.org/x/text v0.15.0 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 )

@@ -26,7 +26,7 @@ func Init() {
 func RecoverPanic(ctx *context.Context, cfg *web.Config) {
 	if err := recover(); err != nil {
 		// 在这里处理 panic
-		ctx.Output.JSON(getErrorToken(fmt.Sprintf("%v", err)), false, false)
+		ctx.Output.JSON(getSystemError(fmt.Sprintf("%v", err)), false, false)
 	}
 }
 
@@ -89,6 +89,7 @@ func hasExpire(data string) bool {
 }
 
 func checkWhiteIp(ip string) bool {
+	flag := false
 	for _, str := range whitelist {
 		if str == "-1.-1.-1.-1" {
 			return false
@@ -97,13 +98,16 @@ func checkWhiteIp(ip string) bool {
 			return true
 		}
 		if str == ip {
-			return true
+			flag = true
+			break
 		}
 		if checkIPAround(str, ip) {
-			return true
+			flag = true
+			break
 		}
 	}
-	return false
+	fmt.Println("IP: ", ip, flag)
+	return flag
 }
 
 func checkIPAround(ipNetStr string, ipStr string) bool {
@@ -126,6 +130,14 @@ func checkIPAround(ipNetStr string, ipStr string) bool {
 func getErrorToken(msg string) interface{} {
 	js := jsonutil.NewJSONObject()
 	js.FluentPut("code", constants.TOKEN_ERROR)
+	js.FluentPut("msg", msg)
+	js.FluentPut("data", "")
+	return js.GetData()
+}
+
+func getSystemError(msg string) interface{} {
+	js := jsonutil.NewJSONObject()
+	js.FluentPut("code", constants.SYSTEM_ERROR)
 	js.FluentPut("msg", msg)
 	js.FluentPut("data", "")
 	return js.GetData()

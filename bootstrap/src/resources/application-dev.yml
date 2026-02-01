@@ -1,0 +1,40 @@
+server:
+  port: 28666
+
+sweet:
+  mysql:
+    host: localhost
+    port: 3306
+    user: root
+    password: root
+    dbName: demo
+    maxIdleConns: 50 # 最大空闲连接数
+    maxOpenConns: 100 # 最大打开连接数
+    logActive: false # 是否打印sql语句
+
+  redis:
+    host: localhost
+    port: 6379
+    database: 2
+
+#  adx:
+#    host: https://xxxxxxx
+#    appId: xxxxxxx
+#    appKey: xxxxxxx
+#    authorityID: xxxxxxx
+
+  logging:
+    level: info
+    adapters:
+      - console
+      - file
+
+  img:
+    mappingUrl: /static # 映射的url 参考Tomcat映射图片地址配置
+    path: D:/uploadFile/images
+    baseUrl: http://localhost:28666
+
+  whitelist:
+    - 192.168.251.0/24
+    - 192.168.50.0/24
+

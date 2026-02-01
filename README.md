@@ -2,21 +2,12 @@
 
 # 基于beego的web框架
 ## github地址 : https://github.com/PurpleScorpion/go-sweet
-# 代码生成
-```text
-本项目可以使用go-sweet-generator进行代码生成 (开发中...)
-可生成 (增/删/改/根据ID查询/分页列表查询)
-    - controller
-    - models
-    - service
-    - routers
-同时可生成前端Vue3代码
-```
+
 
 # 使用前注意
 ```text
-go version 1.20
-使用前请先执行 go mod tidy 进行模块依赖下载
+go version 1.25
+使用前请先执行 go mod download 进行模块依赖下载
 请仔细阅读配置文件说明
 ```
 
@@ -35,35 +26,100 @@ application.yml中的server.active主要用于本地环境的使用
 
 ## 目录结构
 ```text
-    - common # 公共模块 - 分包go.mod
-        - constants     # 常量包
-        - logger        # 日志包
-        - utils         # 工具包
-        - vo            # vo包
-        - yaml          # yaml配置文件处理包 - 一般无需理会
-        - go.mod            # go.mod
+- bootstrap                         # 启动模块 - 负责应用启动和基础配置
     - src
         - main
-            - golang
-                - controller                # controller 包
-                    - BaseController.go     # 基础controller
-                    - FileController.go     # 图片上传相关模块 可自行添加其他文件上传相关内容
-                    - SystemController.go   # 系统相关模块(权限控制)
-                    - UserController.go     # 登录相关模块
-                - models            # 数据库模型包
-                - routers           # 路由包
-                - service           # 业务逻辑包
-            - resources # 配置文件包 - 内容参考java的SpringBoot
-                - application.yml       # 以下配置文件将会在下面详细介绍
-                - application-dev.yml
-                - application-prod.yml
-                - application-test.yml
-        - test
-        - go.mod            # go.mod
-    - Demo_test.go      # 单元测试类
-    - go.mod            # go.mod
-    - go.work           # go.work
-    - main.go           # 程序主入口
+            - filter                # 过滤器包
+                - AuthFilter.go     # 权限过滤器
+            - system                # 系统核心包
+                - DataBaseServer.go # 数据库服务
+                - NoSQLServer.go    # NoSQL服务
+                - confInit.go       # 配置初始化
+                - webServer.go      # Web服务器
+            - Application.go        # 应用启动入口
+        - resources                 # 配置资源文件
+            - application.yml       # 主配置文件
+            - application-dev.yml   # 开发环境配置
+            - application-prod.yml  # 生产环境配置
+            - banner.txt            # 启动banner
+    - go.mod                        # 模块定义
+
+- build.env                         # 构建环境配置
+    - local                         # 本地构建配置
+        - local-build.bat           # 本地构建脚本
+        - local.dockerfile          # 本地Dockerfile
+    - prod                          # 生产构建配置
+        - prod-build.bat            # 生产构建脚本
+        - prod.dockerfile           # 生产Dockerfile
+
+- service-auth                      # 认证服务模块
+    - src
+        - main
+            - controller            # 控制器层
+                - SystemController.go # 系统控制器
+                - UserController.go   # 用户控制器
+            - router                # 路由配置
+                - router.go         # 路由定义
+            - service               # 业务逻辑层
+                - SystemService.go  # 系统服务
+                - UserService.go    # 用户服务
+    - go.mod                        # 模块定义
+
+- service-common                    # 公共服务模块
+    - src
+        - main
+            - controller            # 控制器层
+                - BaseController.go # 基础控制器
+            - models                # 数据模型层
+                - Cert.go           # 证书模型
+                - SysMenu.go        # 系统菜单模型
+                - SysRole.go        # 系统角色模型
+                - SysRoleMenu.go    # 角色菜单关联模型
+                - User.go           # 用户模型
+            - service               # 业务逻辑层
+                - InitService.go    # 初始化服务
+    - go.mod                        # 模块定义
+
+- service-demo                      # 示例服务模块
+    - src
+        - main
+            - controller            # 控制器层
+                - DemoController.go # 示例控制器
+            - router                # 路由配置
+                - router.go         # 路由定义
+            - service               # 业务逻辑层
+                - DemoService.go    # 示例服务
+    - go.mod                        # 模块定义
+
+- shared                            # 共享模块 - 跨服务共享组件
+    - constants                     # 常量定义包
+        - CommonConstant.go         # 通用常量
+        - NetStatusCode.go          # 网络状态码
+        - TimeConstant.go           # 时间常量
+        - UserConstant.go           # 用户相关常量
+    - logger                        # 日志包
+        - LogUtil.go                # 日志工具类
+    - utils                         # 工具包
+        - AdxUtil.go                # Adx工具类
+        - CommonUtils.go            # 通用工具类
+        - DateUtil.go               # 日期工具类
+        - FileUtils.go              # 文件工具类
+        - R.go                      # 统一响应结果
+        - RedisUtil.go              # Redis工具类
+    - vo                            # VO视图对象包
+        - DefaultPageVO.go          # 默认分页VO
+        - HttpVO.go                 # HTTP响应VO
+        - MenuVO.go                 # 菜单VO
+        - RoleVO.go                 # 角色VO
+        - UserVO.go                 # 用户VO
+    - go.mod                        # 模块定义
+
+- main.go                           # 项目主入口文件
+- go.mod                            # 项目根模块定义
+- go.work                           # 工作区配置文件
+- go.sum                            # 依赖校验和文件
+- go.work.sum                       # 工作区校验和文件
+- .gitignore                        # Git忽略文件配置
 ```
 
 ## 关于项目的书写规范以及配置
@@ -74,19 +130,19 @@ application.yml中的server.active主要用于本地环境的使用
 ```
 - logger 日志包
 ```text
-使用beego的日志模块进行记录 , 在打印日志的同时会将日志记录到文件中
+使用slog的日志模块进行记录 , 在打印日志的同时会将日志记录到文件中
 使用方式 logger.Info("日志内容")
-进阶使用方式: logger.Info("日志内容: %d, %s", 123, "参数2")
-keqing工具类使用方式: logger.Info("日志内容: %s", keqing.ToString(obj))
+进阶使用方式1: logger.Info("日志内容: %d, %s", 123, "参数2")
+进阶使用方式2: logger.Info("日志内容: {}, {}", 123, object)
 
 ```
 - yaml 配置文件处理包
 ```text
-该包用于处理conf文件夹下的yaml配置文件
+该包用于处理resources文件夹下的yaml配置文件
 通常无需复写
 如有特殊需求 , 可在该包下进行相应功能的增加
 ```
-- conf 配置文件包
+- resources 配置文件包
 ```text
 该包必须有application.yml文件
 以及必须拥有至少1个 <application-环境名.yml> 命名的文件

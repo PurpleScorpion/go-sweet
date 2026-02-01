@@ -18,12 +18,21 @@
 # vendor/
 
 # Go workspace file
-go.work
-go.work.sum
-.idea/
+go.
 
-*.log
-/logs/*
-/log/*
+
+logs/
+*/.idea
+.idea/*
+/conf/application-dev.yml
+/conf/application-docker.yml
+/conf/application-ppadev.yml
+/conf/application-prod.yml
+/conf/application-test.yml
+/conf/application.yml
+/conf/banner.txt
+/conf/privateKey.pem
+/conf/privateKey4EV.pem
+/conf/publicKey.pem
 /log/
-/logs/
+/log/*

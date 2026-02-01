@@ -20,6 +20,7 @@ func InitApp(router *gin.Engine) {
 	utils.Init()
 	// 优先设置全局panic处理
 	globalPanicRecover(router)
+	middlewareInit(router)
 	// 然后注册全局Filter
 	filterInit(router)
 	// 最后在注册router
@@ -74,7 +75,7 @@ func corsMiddleware() gin.HandlerFunc {
 
 	return cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "DELETE", "OPTIONS"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     headers,
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
@@ -82,7 +83,6 @@ func corsMiddleware() gin.HandlerFunc {
 }
 
 func runApp(router *gin.Engine) {
-	middlewareInit(router)
 
 	port := keqing.ValueInt("${server.port}")
 	err := router.Run(fmt.Sprintf(":%d", port))

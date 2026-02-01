@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"runtime/debug"
+	authRouter "service-auth/src/main/router"
 	"service-common/src/main/service"
 	demoRouter "service-demo/src/main/router"
 	"shared/logger"
@@ -30,6 +31,7 @@ func InitApp(router *gin.Engine) {
 
 func routerInit(router *gin.Engine) {
 	demoRouter.Init(router)
+	authRouter.Init(router)
 }
 
 func serviceInit() {

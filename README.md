@@ -1,6 +1,6 @@
 # go-sweet
 
-# 基于beego的web框架
+# 基于gin的web框架
 ## github地址 : https://github.com/PurpleScorpion/go-sweet
 
 
@@ -9,6 +9,8 @@
 go version 1.25
 使用前请先执行 go mod download 进行模块依赖下载
 请仔细阅读配置文件说明
+
+该本版本为V2版本 , 并不适用于代码生成器
 ```
 
 # 项目上线注意

@@ -1,6 +1,8 @@
-FROM golang:alpine3.18 AS builder
+FROM golang:1.25-alpine AS builder
 
-#ENV GOPROXY=https://goproxy.cn,direct
+ENV GOPROXY=https://goproxy.cn,direct
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 RUN apk add --no-cache git gcc g++ musl-dev
 

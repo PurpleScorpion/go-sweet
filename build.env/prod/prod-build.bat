@@ -7,7 +7,7 @@ cd /d %CUR_PATH%
 docker login -u xxxxx -p xxxxx registry.cn-beijing.aliyuncs.com
 if %errorlevel% NEQ 0 GOTO ERROR
 
-docker build -f .\prod.dockerfile -t registry.cn-beijing.aliyuncs.com/demo/sweet-go:%VER% .
+docker build -f .\prod.dockerfile -t registry.cn-beijing.aliyuncs.com/demo/sweet-go:%VER% ..\..
 if %errorlevel% NEQ 0 GOTO ERROR
 
 docker push registry.cn-beijing.aliyuncs.com/demo/sweet-go:%VER%

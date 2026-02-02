@@ -3,7 +3,7 @@ set CUR_PATH=%cd%
 set VER=local
 
 cd /d %CUR_PATH%
-docker build -f .\local.dockerfile -t 192.168.2.1:5000/sweet-go:%VER% .
+docker build -f .\local.dockerfile -t 192.168.2.1:5000/sweet-go:%VER% ..\..
 if %errorlevel% NEQ 0 GOTO ERROR
 
 @REM docker login -u xxxxx -p xxxxx host_addr
